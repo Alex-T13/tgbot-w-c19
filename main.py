@@ -1,3 +1,9 @@
+from pydantic.main import BaseModel
+from typing import Dict
+from typing import List
+from typing import Optional
+from typing import Text
+from typing import Union
 import os
 import requests
 from fastapi import FastAPI
@@ -23,6 +29,20 @@ app = FastAPI(
     title="XXX API",
     version="1.0.0",
 )
+
+
+class Chat(BaseModel):
+    id: int
+
+class Message(BaseModel):
+    message_id: int
+    date: int
+    chat: Chat
+
+
+class Update(BaseModel):
+    update_id: int
+    message: Optional[Message] = None
 
 
 @app.post(f"{API_URL}/tg/setup/")
@@ -55,7 +75,7 @@ async def tg(update: Update):
         pass
 
 
-if __name__ == "__main__" and settings.MODE_DEBUG:
+if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run(app, host="0.0.0.0", port=PORT)
