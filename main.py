@@ -11,7 +11,7 @@ assert HOST, "host not set"
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 assert TELEGRAM_TOKEN, "no tg token"
 
-TELEGRAM_API = f"https://api.telegram.org/bot{token}"
+TELEGRAM_API = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}"
 
 API_URL = "/api/v1"
 
