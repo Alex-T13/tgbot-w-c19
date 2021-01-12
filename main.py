@@ -1,13 +1,9 @@
-from pydantic.main import BaseModel
-from typing import Dict
-from typing import List
-from typing import Optional
-from typing import Text
-from typing import Union
 import os
+from typing import Optional
+
 import requests
 from fastapi import FastAPI
-from fastapi import status
+from pydantic.main import BaseModel
 
 PORT = int(os.getenv("PORT", 8000))
 
@@ -33,6 +29,7 @@ app = FastAPI(
 
 class Chat(BaseModel):
     id: int
+
 
 class Message(BaseModel):
     message_id: int
@@ -79,4 +76,3 @@ if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run(app, host="0.0.0.0", port=PORT)
-
