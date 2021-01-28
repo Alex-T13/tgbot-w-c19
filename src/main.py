@@ -72,10 +72,7 @@ async def handle_setup_webhook(
             detail="Only admin is allowed to configure webhook",
         )
 
-    webhook_set = await set_webhook(
-        client_session,
-        webhook_url=f"{URL_WEBHOOK_SECRET}/",
-    )
+    webhook_set = await set_webhook(client_session, webhook_url=f"{URL_WEBHOOK_SECRET}/",)
     if not webhook_set:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
