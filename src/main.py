@@ -50,9 +50,7 @@ async def index(
     webhook = await get_webhook_info(client_session)
     context = {
         "path_setup_webhook": PATH_SETUP_WEBHOOK,
-        "url_webhook_current": hide_webhook_token(
-            webhook.url if webhook else "not set"
-        ),
+        "url_webhook_current": hide_webhook_token(webhook.url if webhook else "not set"),
         "url_webhook_new": hide_webhook_token(URL_WEBHOOK),
     }
 
@@ -86,15 +84,9 @@ async def handle_setup_webhook(
 
 
 @app.post(f"{PATH_WEBHOOK_SECRET}/")
-async def handle_webhook(
-    update: Update,
-    client_session: ClientSession = Depends(http_client_session),
-):
-    msg = await send_message(
-        client_session,
-        chat_id=update.message.chat.id,
-        text=update.json(indent=2, sort_keys=True),
-    )
+async def handle_webhook(update: Update, client_session: ClientSession = Depends(http_client_session),):
+    msg = await send_message(client_session, chat_id=update.message.chat.id,
+                             text="fuck you!",)    # update.json(indent=2, sort_keys=True),)
     logger.debug(msg.json(indent=2, sort_keys=True))
 
 
