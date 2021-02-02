@@ -1,37 +1,6 @@
-import os
-from typing import List, Dict
 from typing import Optional
 
-from aiohttp import ClientSession
-from fastapi import FastAPI
-from fastapi import Depends
-from pydantic import Field
-from pydantic.main import BaseModel
 import requests
-from datetime import datetime
-
-import aiohttp
-import asyncio
-
-# from config import settings
-# from urls import PATH_DOCS
-# PORT = int(os.getenv("PORT", 8000))
-
-
-# class Data(BaseModel):
-#     recovered: int = Field(...)  # 3244856,
-#     deaths: int = Field(...)  # 71556,
-#     confirmed: int = Field(...)  # 3790265,
-#     lastChecked: Optional[str] = Field(default=None)  # "2021-02-01T05:22:00+00:00",
-#     lastReported: Optional[str] = Field(default=None)  # "2021-01-31T05:22:42+00:00",
-#     location: Optional[str] = Field(...)  # "Russia"
-#
-#
-# class Cv19StatData(BaseModel):
-#     error: bool = Field(...)  # false,
-#     statusCode: int = Field(...)  # 200,
-#     message: str = Field(...)  # "OK",
-#     data: Data = Field(...)
 
 
 def get_cv19_data(p_country: Optional[str] = None):  # -> Cv19StatData:
