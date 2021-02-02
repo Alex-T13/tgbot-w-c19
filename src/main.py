@@ -23,6 +23,7 @@ from urls import PATH_SETUP_WEBHOOK
 from urls import PATH_WEBHOOK_SECRET
 from urls import URL_WEBHOOK
 from urls import URL_WEBHOOK_SECRET
+from get_data.get_data_c19 import get_cv19_data
 
 app = FastAPI(
     description="Telegram Bot",
@@ -86,7 +87,7 @@ async def handle_setup_webhook(
 @app.post(f"{PATH_WEBHOOK_SECRET}/")
 async def handle_webhook(update: Update, client_session: ClientSession = Depends(http_client_session),):
     msg = await send_message(client_session, chat_id=update.message.chat.id,
-                             text="fuck you!",)    # update.json(indent=2, sort_keys=True),)
+                             text=get_cv19_data("Belarus"),)    # update.json(indent=2, sort_keys=True),)
     logger.debug(msg.json(indent=2, sort_keys=True))
 
 
