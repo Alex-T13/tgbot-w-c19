@@ -3,10 +3,8 @@ from typing import Optional
 
 import requests
 
-# from custom_logging import logger
 
-
-def get_cv19_data(p_country: Optional[str] = None):  # -> Cv19StatData:
+def get_cv19_data(p_country: Optional[str] = None):  # -> Cv19StatData:  session: ClientSession
     url = "https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total"
     querystring = {"country": p_country}
     headers = {
@@ -14,7 +12,6 @@ def get_cv19_data(p_country: Optional[str] = None):  # -> Cv19StatData:
         'x-rapidapi-host': "covid-19-coronavirus-statistics.p.rapidapi.com"
     }
     resp = requests.get(url, headers=headers, params=querystring)
-    # print(resp.status_code)
 
     if resp.status_code != 200:
         return f"response content error: {resp.text}"
@@ -34,7 +31,7 @@ def get_cv19_data(p_country: Optional[str] = None):  # -> Cv19StatData:
     return result
 
 
-country = "Belarus"
-
-
-get_cv19_data(country)
+# country = "Belarus"
+#
+#
+# get_cv19_data(country)
