@@ -1,5 +1,5 @@
 from typing import List
-from typing import Optional
+from typing import Optional, Union
 
 from pydantic import Field
 from pydantic.main import BaseModel
@@ -44,8 +44,22 @@ class Message(BaseModel):
         }
 
 
+class EditedMessage(BaseModel):
+    chat: Chat = Field(...)
+    date: int = Field(...)
+    entities: List[MessageEntity] = Field(default_factory=list)
+    from_: Optional[User] = Field(default=None)
+    message_id: int = Field(...)
+    text: Optional[str] = Field(default=None)
+
+    class Config:
+        fields = {
+            "from_": "from",
+        }
+
+
 class Update(BaseModel):
-    message: Optional[Message] = Field(default=None)
+    message: Union[Message, EditedMessage] = Field(default=None)
     update_id: int = Field(...)
 
 
