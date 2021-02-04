@@ -1,14 +1,11 @@
 from get_data.get_data_c19 import get_cv19_data
 
 
-def select_event(ar: str):
-    switcher = ["hi", "hello", "good morning", "good afternoon", "good evening",
-                "привет", "здравствуй", "здравствуйте", "доброе утро",
-                "добрый день", "добрый вечер"
-                ]
+def select_event(ar):
+    switcher = ["hi", "hello", "good morning", "good afternoon", "good evening", "привет", "здравствуй", "здравствуйте",
+                "доброе утро","добрый день", "добрый вечер"]
     switcher2 = ["дай ответ на главный вопрос жизни, вселенной и вообще",
-                 "give an answer to the ultimate question of life, the universe, and everything"
-                 ]
+                 "give an answer to the ultimate question of life, the universe, and everything"]
     if ar.lower() in switcher:
         # print(ar)
         return ar
@@ -19,7 +16,7 @@ def select_event(ar: str):
     return "Ok"
 
 
-def select_event_w_entities(arg: str):
+def select_event_w_entities(arg):
     switcher = {
         "/covid19global": lambda: get_cv19_data(),
         "/covid19blr": lambda: get_cv19_data("Belarus"),

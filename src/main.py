@@ -23,8 +23,8 @@ from urls import PATH_SETUP_WEBHOOK
 from urls import PATH_WEBHOOK_SECRET
 from urls import URL_WEBHOOK
 from urls import URL_WEBHOOK_SECRET
-from get_data.get_data_c19 import get_cv19_data
-from utils import select_event
+# from get_data.get_data_c19 import get_cv19_data
+# from utils import select_event
 
 app = FastAPI(
     description="Telegram Bot",
