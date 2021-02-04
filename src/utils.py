@@ -6,13 +6,17 @@ def select_event(ar: str):
                 "привет", "здравствуй", "здравствуйте", "доброе утро",
                 "добрый день", "добрый вечер"
                 ]
+    switcher2 = ["дай ответ на главный вопрос жизни, вселенной и вообще",
+                 "give an answer to the ultimate question of life, the universe, and everything"
+                 ]
     if ar.lower() in switcher:
+        # print(ar)
         return ar
-    if ar.lower() == "дай ответ на главный вопрос жизни, вселенной и вообще" or \
-            "give an answer to the ultimate question of life, the universe, and everything":
+    if ar.lower() in switcher2:
+        # print("42")
         return "42"
-    else:
-        return "Ok"
+    # print("ok")
+    return "Ok"
 
 
 def select_event_w_entities(arg: str):
@@ -27,6 +31,7 @@ def select_event_w_entities(arg: str):
     return switcher[arg]()
 
 
+# select_event("hello")
 # get_cv19_data(event_selection("/covid19-usa"))
 # select_event_w_entities("/covid19rus")
 
