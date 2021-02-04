@@ -87,10 +87,10 @@ async def handle_setup_webhook(
 
 @app.post(f"{PATH_WEBHOOK_SECRET}/")
 async def handle_webhook(update: Update, client_session: ClientSession = Depends(http_client_session),):
-    if not update.message.entities:
-        answ = select_event(update.message.text)
+    # if not update.message.entities:
+    #     answ = select_event(update.message.text)
     msg = await send_message(client_session, chat_id=update.message.chat.id,
-                             text=answ)  # update.json(indent=2, sort_keys=True),)   #get_cv19_data("Belarus"),)
+                             text=update.json(indent=2, sort_keys=True),)   #get_cv19_data("Belarus"),)
     logger.debug(msg.json(indent=2, sort_keys=True))
 
 
