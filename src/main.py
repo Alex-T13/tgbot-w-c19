@@ -90,7 +90,7 @@ async def handle_webhook(update: Update, client_session: ClientSession = Depends
     # if not update.message.entities:
     #     answ = select_event(update.message.text)
     msg = await send_message(client_session, chat_id=update.message.chat.id,
-                             text=update.json(indent=2, sort_keys=True),)   #get_cv19_data("Belarus"),)
+                             text=update.json(indent=2, sort_keys=True),)
     logger.debug(msg.json(indent=2, sort_keys=True))
 
 
