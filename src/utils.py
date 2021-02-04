@@ -11,7 +11,8 @@ def select_event(ar: str):
     if ar.lower() == "дай ответ на главный вопрос жизни, вселенной и вообще" or \
             "give an answer to the ultimate question of life, the universe, and everything":
         return "42"
-    return "Ok"
+    else:
+        return "Ok"
 
 
 def select_event_w_entities(arg: str):
