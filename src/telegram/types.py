@@ -60,7 +60,8 @@ class EditedMessage(BaseModel):
 
 
 class Update(BaseModel):
-    message: Union[Message, EditedMessage] = Field(default=None)
+    message: Optional[Message] = Field(default=None)
+    edited_message: Optional[EditedMessage] = Field(default=None)
     update_id: int = Field(...)
 
 
