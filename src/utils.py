@@ -1,7 +1,7 @@
 from get_data.get_data_c19 import get_cv19_data
 
 
-def select_event(ar):
+def choice_of_answer(ar):
     check1 = ["hi", "hello", "good morning", "good afternoon", "good evening", "привет", "здравствуй", "здравствуйте",
               "доброе утро", "добрый день", "добрый вечер"]
     check2 = ["дай ответ на главный вопрос жизни, вселенной и вообще",
@@ -27,7 +27,3 @@ def select_event_w_entities(arg):
 
     # return switcher.get(arg, "Ok")
     return switcher[arg]()
-
-# select_event("hello")
-# get_cv19_data(event_selection("/covid19-usa"))
-# select_event_w_entities("/covid19rus")
