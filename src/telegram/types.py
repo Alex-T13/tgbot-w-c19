@@ -44,8 +44,10 @@ class Message(BaseModel):
         }
 
 
-class EditedMessage(BaseModel):
-    chat: Chat = Field(...)
+class EditedMessageText(BaseModel):
+    chat_id: Optional[int] = Field(default=None)
+    message_id: Optional[int] = Field(default=None)
+    inline_message_id: Optional[str] = Field(default=None)
     date: int = Field(...)
     entities: List[MessageEntity] = Field(default_factory=list)
     from_: Optional[User] = Field(default=None)
@@ -59,7 +61,7 @@ class EditedMessage(BaseModel):
 
 
 class Update(BaseModel):
-    message: Union[Message, EditedMessage] = Field(default=None)
+    message: Optional[Message] = Field(default=None)
     update_id: int = Field(...)
 
 
