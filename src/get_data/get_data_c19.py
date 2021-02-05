@@ -106,7 +106,7 @@ from custom_logging import logger
 
 
 async def get_cv19_data(session: ClientSession,  # = Depends(http_client_session),
-                        p_country: Optional[str] = None) -> Optional[Cv19Stat]:
+                        p_country: Optional[str] = None) -> Optional[Cv19Response]:
     # url = "https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total"
     url = f"https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total?country={p_country}"
     # querystring = {"country": p_country}
