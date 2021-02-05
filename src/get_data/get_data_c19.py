@@ -86,7 +86,7 @@ async def get_cv19_data(session: ClientSession,  # = Depends(http_client_session
     #     logger.warning("rapidapi.com api call failed: %s", resp)
     #     body = resp.text
     #     logger.debug(body)
-    payload = await response.json()
+    payload = json.dumps(response, indent=2, ensure_ascii=False)  # await response.json()
 
     # resp_cv19_dict = {
     #     "Локация": resp['data']['location'],
