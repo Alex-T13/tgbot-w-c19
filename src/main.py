@@ -90,8 +90,10 @@ async def handle_setup_webhook(
 async def handle_webhook(update: Update, client_session: ClientSession = Depends(http_client_session),):
     update_massage = update.message if update.message is not None else update.edited_message
     if update_massage.entities is None:
+        print(f"{update_massage} entities is None")
         answ = choice_of_answer(update_massage.text)
     else:
+        print(f"{update_massage} entities is try")
         answ = select_event_of_command(client_session, update_massage.text)
     # text = update.json(indent=4, sort_keys=True)
     # print(update_massage)
