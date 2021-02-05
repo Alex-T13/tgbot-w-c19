@@ -73,7 +73,7 @@ async def get_cv19_data(session: ClientSession,  # = Depends(http_client_session
         'x-rapidapi-key': "8171e78a27mshe06f34e09766f70p1b5a9djsnf7011598a514",
         'x-rapidapi-host': "covid-19-coronavirus-statistics.p.rapidapi.com"
     }
-    response = await session.get(url, headers=headers)
+    response = await session.get(url, headers=headers, json_serialize=dict)
     # async with session.get(url, headers=headers) as response:
     # resp = await requests.get(url, headers=headers, params=querystring)
 
@@ -89,8 +89,10 @@ async def get_cv19_data(session: ClientSession,  # = Depends(http_client_session
     #     logger.warning("rapidapi.com api call failed: %s", resp)
     #     body = resp.text
     #     logger.debug(body)
-    print(response.status, response.text)
-    payload = json.dumps(response, indent=2, ensure_ascii=False)  # await response.json()
+    print(response.status)
+    body = await response.text()
+    print(body)
+    payload = await json.dumps(response, indent=2, ensure_ascii=False)  # await response.json()
 
     # resp_cv19_dict = {
     #     "Локация": resp['data']['location'],
