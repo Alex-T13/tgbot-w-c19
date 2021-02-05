@@ -24,13 +24,13 @@ class Cv19Data(BaseModel):
     lastReported: Optional[str] = Field(default=None)  # "2021-02-05T05:22:38+00:00",
     location: Optional[str] = Field(default=None)  # "Belarus"
 
-    # class Config:
-    #     fields = {
-    #         "location": "Локация",
-    #         "confirmed": "Заболевших",
-    #         "recovered": "Выздоровевших",
-    #         "deaths": "Умерших",
-    #     }
+    class Config:
+        fields = {
+            "location": "Локация",
+            "confirmed": "Заболевших",
+            "recovered": "Выздоровевших",
+            "deaths": "Умерших",
+        }
 
 
 class Cv19Stat(BaseModel):
