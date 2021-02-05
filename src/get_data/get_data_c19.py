@@ -11,6 +11,47 @@ from fastapi import Form
 from fastapi import HTTPException
 from fastapi import Request
 from fastapi import status
+from pydantic import Field
+from pydantic.main import BaseModel
+
+
+class Cv19Data(BaseModel):
+    confirmed: Optional[int] = Field(default=None)  # 253413,
+    recovered: Optional[int] = Field(default=None)  # 241150,
+    deaths: Optional[int] = Field(default=None)  # 1755,
+    lastChecked: Optional[str] = Field(default=None)  # "2021-02-05T14:22:01+00:00",
+    lastReported: Optional[str] = Field(default=None)  # "2021-02-05T05:22:38+00:00",
+    location: Optional[str] = Field(default=None)  # "Belarus"
+
+    # class Config:
+    #     fields = {
+    #         "location": "Локация",
+    #         "confirmed": "Заболевших",
+    #         "recovered": "Выздоровевших",
+    #         "deaths": "Умерших",
+    #     }
+
+
+class Cv19Stat(BaseModel):
+    error: bool = Field(...)  # false,
+    statusCode: int = Field(...)  # 200,
+    message: str = Field(...)  # "OK",
+    data: Optional[Cv19Data] = Field(default=None)
+
+
+class Cv19Response(Cv19Data):
+    location = Cv19Data.location
+    confirmed = Cv19Data.confirmed
+    recovered = Cv19Data.recovered
+    deaths = Cv19Data.deaths
+
+    # class Config:
+    #     fields = {
+    #         "location": "Локация",
+    #         "confirmed": "Заболевших",
+    #         "recovered": "Выздоровевших",
+    #         "deaths": "Умерших",
+    #     }
 
 
 # async def index(
@@ -65,7 +106,7 @@ from custom_logging import logger
 
 
 async def get_cv19_data(session: ClientSession,  # = Depends(http_client_session),
-                        p_country: Optional[str] = None):  # -> Cv19StatData:
+                        p_country: Optional[str] = None) -> Optional[Cv19Response]:
     # url = "https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total"
     url = f"https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total?country={p_country}"
     # querystring = {"country": p_country}
@@ -73,7 +114,7 @@ async def get_cv19_data(session: ClientSession,  # = Depends(http_client_session
         'x-rapidapi-key': "8171e78a27mshe06f34e09766f70p1b5a9djsnf7011598a514",
         'x-rapidapi-host': "covid-19-coronavirus-statistics.p.rapidapi.com"
     }
-    response = await session.get(url, headers=headers, json_serialize=True)
+    response = await session.get(url, headers=headers, json_serialize=Cv19Stat)
     # async with session.get(url, headers=headers) as response:
     # resp = await requests.get(url, headers=headers, params=querystring)
 
@@ -84,15 +125,11 @@ async def get_cv19_data(session: ClientSession,  # = Depends(http_client_session
         logger.debug(body)
 
         return None
-    # if resp.status_code != 200:
-    #     return f"response content error: {resp.text}"
-    #     logger.warning("rapidapi.com api call failed: %s", resp)
-    #     body = resp.text
-    #     logger.debug(body)
+
     print(response.status)
     body = await response.text()
     print(body)
-    payload = await json.dumps(response, indent=2, ensure_ascii=False)  # await response.json()
+    payload = await response.json()  # json.dumps(response, indent=2, ensure_ascii=False)
 
     # resp_cv19_dict = {
     #     "Локация": resp['data']['location'],
