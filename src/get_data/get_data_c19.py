@@ -75,5 +75,6 @@ async def get_cv19_data(session: ClientSession,
     #     "Умерли": resp['data']['deaths'],
     # }
     # result = json.dumps(resp_cv19_dict, indent=2, ensure_ascii=False)
-    print(payload)
+
+    # print(payload)
     return payload

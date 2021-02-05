@@ -101,7 +101,7 @@ async def handle_webhook(update: Update, client_session: ClientSession = Depends
     # text = update.json(indent=4, sort_keys=True)
     # print(update_massage)
     msg = await send_message(client_session, chat_id=update_massage.chat.id,
-                             text=json.dumps(answ, indent=2, ensure_ascii=False),)   # sort_keys=True, ensure_ascii=False),)
+                             text=json.dumps(answ.data.Config, indent=2, ensure_ascii=False),)   # sort_keys=True, ensure_ascii=False),)
     logger.debug(msg.json(indent=2, sort_keys=True))
 
 
