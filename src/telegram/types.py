@@ -76,6 +76,18 @@ class WebhookInfo(BaseModel):
     url: str = Field(...)
 
 
+class Cv19StatData(BaseModel):
+    pass
+
+
+class Cv19Data(BaseModel):
+    pass
+
+
+class Cv19Response(Cv19StatData):
+    pass
+
+
 # ==== post setup =========================================
 
 Message.update_forward_refs()

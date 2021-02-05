@@ -24,7 +24,7 @@ from urls import PATH_WEBHOOK_SECRET
 from urls import URL_WEBHOOK
 from urls import URL_WEBHOOK_SECRET
 from get_data.get_data_c19 import get_cv19_data
-from utils import choice_of_answer
+from utils import choice_of_answer, select_event_for_command
 
 app = FastAPI(
     description="Telegram Bot",
@@ -88,10 +88,12 @@ async def handle_setup_webhook(
 @app.post(f"{PATH_WEBHOOK_SECRET}/")
 async def handle_webhook(update: Update, client_session: ClientSession = Depends(http_client_session),):
     update_massage = update.message if update.message is not None else update.edited_message
-    # if not update_work.entities:
-    answ = choice_of_answer(update_massage.text if update_massage.entities is None else update_massage.text)
+    if update_massage.entities is None:
+        answ = choice_of_answer(update_massage.text)
+    else:
+        answ = select_event_for_command(client_session, update_massage.text)
     # text = update.json(indent=4, sort_keys=True)
-    print(update_massage)
+    # print(update_massage)
     msg = await send_message(client_session, chat_id=update_massage.chat.id,
                              text=answ,)   # update.json(indent=4, sort_keys=True, ensure_ascii=False),)
     logger.debug(msg.json(indent=2, sort_keys=True))

@@ -1,3 +1,5 @@
+from aiohttp import ClientSession
+
 from get_data.get_data_c19 import get_cv19_data
 
 
@@ -17,12 +19,12 @@ def choice_of_answer(ar: str):
         return "Ok"
 
 
-def select_event_w_entities(arg: str):
+def select_event_of_commands(session: ClientSession, arg: str):
     switcher = {
-        "/covid19global": lambda: get_cv19_data(),
-        "/covid19blr": lambda: get_cv19_data("Belarus"),
-        "/covid19rus": lambda: get_cv19_data("Russia"),
-        "/covid19usa": lambda: get_cv19_data("US"),
+        "/covid19global": lambda: get_cv19_data(session),
+        "/covid19blr": lambda: get_cv19_data(session, "Belarus"),
+        "/covid19rus": lambda: get_cv19_data(session, "Russia"),
+        "/covid19usa": lambda: get_cv19_data(session, "USA"),
     }
 
     # return switcher.get(arg, "Ok")
