@@ -40,10 +40,10 @@ class Cv19Stat(BaseModel):
 
 
 class Cv19Response(Cv19Data):
-    location = Cv19Data.location
-    confirmed = Cv19Data.confirmed
-    recovered = Cv19Data.recovered
-    deaths = Cv19Data.deaths
+    location = Field(...)
+    confirmed = Field(...)
+    recovered = Field(...)
+    deaths = Field(...)
 
     # class Config:
     #     fields = {
