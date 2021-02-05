@@ -89,7 +89,7 @@ async def handle_setup_webhook(
 async def handle_webhook(update: Update, client_session: ClientSession = Depends(http_client_session),):
     update_massage = update.message if update.message is not None else update.edited_message
     # if not update_work.entities:
-    answ = choice_of_answer(update_massage.text if update_massage.entities is None else update_massage.entities)
+    answ = choice_of_answer(update_massage.text if update_massage.entities is None else update_massage.text)
     # text = update.json(indent=4, sort_keys=True)
     print(update_massage)
     msg = await send_message(client_session, chat_id=(update.message.chat.id or update.edited_message.chat.id),
