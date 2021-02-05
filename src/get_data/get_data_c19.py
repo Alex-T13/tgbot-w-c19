@@ -66,17 +66,19 @@ from custom_logging import logger
 
 async def get_cv19_data(session: ClientSession,  # = Depends(http_client_session),
                         p_country: Optional[str] = None):  # -> Cv19StatData:
-    url = "https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total"
-    querystring = {"country": p_country}
+    # url = "https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total"
+    url = f"https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total?country={p_country}"
+    # querystring = {"country": p_country}
     headers = {
         'x-rapidapi-key': "8171e78a27mshe06f34e09766f70p1b5a9djsnf7011598a514",
         'x-rapidapi-host': "covid-19-coronavirus-statistics.p.rapidapi.com"
     }
-    response = await session.get(url, params=querystring, headers=headers)
+    response = await session.get(url, headers=headers)
     # async with session.get(url, headers=headers) as response:
     # resp = await requests.get(url, headers=headers, params=querystring)
 
     if response.status != status.HTTP_200_OK:
+        print(response.status, response.text())
         logger.warning("telegram api call failed: %s", response)
         body = await response.text()
         logger.debug(body)
