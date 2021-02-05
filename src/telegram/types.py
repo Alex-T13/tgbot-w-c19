@@ -44,14 +44,13 @@ class Message(BaseModel):
         }
 
 
-class EditedMessageText(BaseModel):
-    chat_id: Optional[int] = Field(default=None)
-    message_id: Optional[int] = Field(default=None)
-    inline_message_id: Optional[str] = Field(default=None)
-    date: int = Field(...)
-    entities: List[MessageEntity] = Field(default_factory=list)
-    from_: Optional[User] = Field(default=None)
+class EditedMessage(BaseModel):
     message_id: int = Field(...)
+    from_: Optional[User] = Field(default=None)
+    chat: Chat = Field(...)
+    date: int = Field(...)
+    edit_date: int = Field(...)
+    entities: List[MessageEntity] = Field(default_factory=list)
     text: Optional[str] = Field(default=None)
 
     class Config:
@@ -61,7 +60,7 @@ class EditedMessageText(BaseModel):
 
 
 class Update(BaseModel):
-    message: Optional[Message] = Field(default=None)
+    message: Union[Message, EditedMessage] = Field(default=None)
     update_id: int = Field(...)
 
 
