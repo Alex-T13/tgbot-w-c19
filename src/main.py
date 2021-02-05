@@ -92,7 +92,7 @@ async def handle_webhook(update: Update, client_session: ClientSession = Depends
     answ = choice_of_answer(update_massage.text if update_massage.entities is None else update_massage.text)
     # text = update.json(indent=4, sort_keys=True)
     print(update_massage)
-    msg = await send_message(client_session, chat_id=(update.message.chat.id or update.edited_message.chat.id),
+    msg = await send_message(client_session, chat_id=update_massage.chat.id,
                              text=answ,)   # update.json(indent=4, sort_keys=True, ensure_ascii=False),)
     logger.debug(msg.json(indent=2, sort_keys=True))
 
