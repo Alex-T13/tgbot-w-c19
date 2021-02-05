@@ -73,7 +73,7 @@ async def get_cv19_data(session: ClientSession,  # = Depends(http_client_session
         'x-rapidapi-key': "8171e78a27mshe06f34e09766f70p1b5a9djsnf7011598a514",
         'x-rapidapi-host': "covid-19-coronavirus-statistics.p.rapidapi.com"
     }
-    response = await session.get(url, headers=headers, json_serialize=dict)
+    response = await session.get(url, headers=headers, json_serialize=True)
     # async with session.get(url, headers=headers) as response:
     # resp = await requests.get(url, headers=headers, params=querystring)
 
