@@ -26,5 +26,4 @@ def select_event_of_command(session: ClientSession, arg: str):
         "/covid19usa": lambda: get_cv19_data(session, "USA"),
     }
 
-    # return switcher.get(arg, "Ok")
     return switcher[arg]()

@@ -13,6 +13,7 @@ from fastapi import Request
 from fastapi import status
 from pydantic import Field
 from pydantic.main import BaseModel
+from custom_logging import logger
 
 
 class Cv19Data(BaseModel):
@@ -54,61 +55,16 @@ class Cv19Stat(BaseModel):
     #     }
 
 
-# async def index(
-#     request: Request,
-#     # client_session: ClientSession = Depends(http_client_session),
-# ):
-#     logger.debug("handling index")
-#     webhook = await get_webhook_info(client_session)
-#     context = {
-#         "path_setup_webhook": PATH_SETUP_WEBHOOK,
-#         "url_webhook_current": hide_webhook_token(webhook.url if webhook else "not set"),
-#         "url_webhook_new": hide_webhook_token(URL_WEBHOOK),
-#     }
-#
-#     response = templates.TemplateResponse("index.html", {"request": request, **context})
-#
-#     return response
-#
-#
-# async def get_webhook_info(session: ClientSession, /) -> Optional[WebhookInfo]:
-#     result = await _call_tg_method(session, "getWebhookInfo")
-#     webhook_info = WebhookInfo.parse_obj(result)
-#
-#     return webhook_info
-#
-#
-# async def _call_tg_method(session: ClientSession, method_name: str, /, **kw):
-#     url = f"{URL_TELEGRAM_API}/{method_name}"
-#     response = await session.post(url, **kw)
-#     if response.status != status.HTTP_200_OK:
-#         logger.warning("telegram api call failed: %s", response)
-#         body = await response.text()
-#         logger.debug(body)
-#
-#         return None
-#
-#     payload = await response.json()
-#     if not (ok := payload.get("ok")):
-#         logger.warning("payload is not ok: %s", ok)
-#         logger.debug(payload)
-#
-#         return None
-#
-#     result = payload["result"]
-#     return result
 
-
-# async def http_client_session():
-#     async with ClientSession() as session:
-#         yield session
-from custom_logging import logger
 
 
 async def get_cv19_data(session: ClientSession,  # = Depends(http_client_session),
                         p_country: Optional[str] = None) -> Optional[Cv19Data]:
     # url = "https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total"
-    url = f"https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total?country={p_country}"
+    if not p_country:
+        url = "https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total"
+    else:
+        url = f"https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total?country={p_country}"
     # querystring = {"country": p_country}
     headers = {
         'x-rapidapi-key': "8171e78a27mshe06f34e09766f70p1b5a9djsnf7011598a514",
@@ -119,16 +75,16 @@ async def get_cv19_data(session: ClientSession,  # = Depends(http_client_session
     # resp = await requests.get(url, headers=headers, params=querystring)
 
     if response.status != status.HTTP_200_OK:
-        print(response.status, response.text())
+        # print(response.status, response.text())
         logger.warning("telegram api call failed: %s", response)
         body = await response.text()
         logger.debug(body)
 
         return None
 
-    print(response.status)
-    body = await response.text()
-    print(body)
+    # print(response.status)
+    # body = await response.text()
+    # print(body)
     payload = await response.json()  # json.dumps(response, indent=2, ensure_ascii=False)
 
     # resp_cv19_dict = {
