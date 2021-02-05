@@ -89,7 +89,7 @@ async def handle_setup_webhook(
 @app.post(f"{PATH_WEBHOOK_SECRET}/")
 async def handle_webhook(update: Update, client_session: ClientSession = Depends(http_client_session),):
     update_massage = update.message if update.message is not None else update.edited_message
-    if update_massage.entities is None:
+    if not update_massage.entities:
         print(f"{update_massage} entities is None")
         answ = choice_of_answer(update_massage.text)
     else:
