@@ -8,20 +8,12 @@ from custom_logging import logger
 
 
 class Cv19Data(BaseModel):
-    confirmed: Optional[int] = Field(default=None)  # 253413,
-    recovered: Optional[int] = Field(default=None)  # 241150,
-    deaths: Optional[int] = Field(default=None)  # 1755,
+    confirmed: Optional[int] = Field(default=None, alias="Заболевших")  # 253413,
+    recovered: Optional[int] = Field(default=None, alias="Выздоровевших")  # 241150,
+    deaths: Optional[int] = Field(default=None, alias="Умерших")  # 1755,
     lastChecked: Optional[str] = Field(default=None)  # "2021-02-05T14:22:01+00:00",
     lastReported: Optional[str] = Field(default=None)  # "2021-02-05T05:22:38+00:00",
-    location: Optional[str] = Field(default=None)  # "Belarus"
-
-    # class Config:
-    #     fields = {
-    #         "location": "loc1111",
-    #         "confirmed": "Заболевших",
-    #         "recovered": "Выздоровевших",
-    #         "deaths": "Умерших",
-    #     }
+    location: Optional[str] = Field(default=None, alias="Локация")  # "Belarus"
 
 
 class Cv19Stat(BaseModel):
@@ -79,5 +71,5 @@ async def get_cv19_data(
     # result = result.d
 
     # print(payload)
-    payload = payload.dict(include={'confirmed', 'recovered', 'deaths', 'location'})
+    # payload = payload.dict(include={'confirmed', 'recovered', 'deaths', 'location'})
     return payload
