@@ -60,7 +60,7 @@ async def get_cv19_data(
 
     # print(response.status)
     payload = await response.json()
-    payload = payload.data.recovered
+    # payload = payload['data']
 
     # resp_cv19_dict = {
     #     "Локация": resp['data']['location'],
@@ -69,7 +69,6 @@ async def get_cv19_data(
     #     "Умерли": resp['data']['deaths'],
     # }
     # result = json.dumps(response, indent=2, ensure_ascii=False)
-    # result = result.d
 
     # print(payload)
     # payload = payload.dict(include={'confirmed', 'recovered', 'deaths', 'location'})
