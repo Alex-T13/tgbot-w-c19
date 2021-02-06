@@ -17,10 +17,11 @@ class Cv19Data(BaseModel):
 
     class Config:
         fields = {
-            "location": "Локация",
+
             "confirmed": "Заболевших",
             "recovered": "Выздоровевших",
             "deaths": "Умерших",
+            "location": "Локация",
         }
 
 
@@ -83,12 +84,14 @@ async def get_cv19_data(
     print(f"{type(payload)} из get_data_cv payload")
     print(f"{payload} из get_data_cv payload")
 
-    obj_format = Cv19Stat(**payload)
+    obj_format = Cv19Stat(**payload).data
 
     print(f"{type(obj_format)} из get_data_cv obj_format")
     print(f"{obj_format} из get_data_cv obj_format")
 
-    obj_format_json = obj_format.data.json(exclude={"lastChecked", "lastReported"})
+    # obj_format_2 = Cv19Data(**obj_format)
+
+    obj_format_json = obj_format.json()
 
     print(f"{type(obj_format_json)} из get_data_cv obj_format_json")
     print(f"{obj_format_json} из get_data_cv obj_format_json")
