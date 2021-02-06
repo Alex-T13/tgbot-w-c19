@@ -58,7 +58,7 @@ async def get_cv19_data(
 
         return None
 
-    # print(response.status)
+    print(f"{type(response)} из get_data_cv")
     payload = await response.json()
     # payload = payload['data']
 
