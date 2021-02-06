@@ -8,21 +8,21 @@ from custom_logging import logger
 
 
 class Cv19Data(BaseModel):
-    recovered: Optional[int] = Field(default=None)  # 241150,
-    deaths: Optional[int] = Field(default=None)  # 1755,
-    confirmed: Optional[int] = Field(default=None)  # 253413,
+    recovered: int = Field(...)  # 241150,
+    deaths: int = Field(...)  # 1755,
+    confirmed: int = Field(...)  # 253413,
     lastChecked: Optional[str] = Field(default=None)  # "2021-02-05T14:22:01+00:00",
     lastReported: Optional[str] = Field(default=None)  # "2021-02-05T05:22:38+00:00",
-    location: Optional[str] = Field(default=None)  # "Belarus"
+    location: str = Field(...)  # "Belarus"
 
-    class Config:
-        fields = {
-
-            "confirmed": "Заболевших",
-            "recovered": "Выздоровевших",
-            "deaths": "Умерших",
-            "location": "Локация",
-        }
+    # class Config:
+    #     fields = {
+    #
+    #         "confirmed": "Заболевших",
+    #         "recovered": "Выздоровевших",
+    #         "deaths": "Умерших",
+    #         "location": "Локация",
+    #     }
 
 
 class Cv19Stat(BaseModel):
