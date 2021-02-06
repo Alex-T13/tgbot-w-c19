@@ -64,10 +64,14 @@ async def get_cv19_data(
     print(f"{type(payload)} из get_data_cv payload")
 
     obj_format = Cv19Stat(**payload)
+
+    print(f"{type(obj_format)} из get_data_cv obj_format")
+    print(f"{obj_format} из get_data_cv obj_format")
+
     obj_format_json = obj_format.json(include={'confirmed', 'recovered', 'deaths', 'location'}, by_alias=True)
 
-    print(f"{type(obj_format_json)} из get_data_cv payload")
-    print(f"{obj_format_json} из get_data_cv payload")
+    print(f"{type(obj_format_json)} из get_data_cv obj_format_json")
+    print(f"{obj_format_json} из get_data_cv obj_format_json")
 
     # payload2 = Cv19Stat(payload)
 
