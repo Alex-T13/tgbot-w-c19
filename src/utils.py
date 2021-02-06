@@ -20,7 +20,7 @@ def choice_of_answer(ar: str):
 
 
 def select_event_of_command(
-        session: ClientSession, arg: str) -> Coroutine[Any, Any, Optional[Cv19Stat]]:
+        session: ClientSession, arg: str):  # -> ########### Coroutine[Any, Any, Optional[Cv19Stat]]:
     switcher = {
         "/covid19global": lambda: get_cv19_data(session),
         "/covid19blr": lambda: get_cv19_data(session, "Belarus"),
