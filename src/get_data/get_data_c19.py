@@ -60,6 +60,7 @@ async def get_cv19_data(
 
     # print(response.status)
     payload = await response.json()
+    payload = payload.data.recovered
 
     # resp_cv19_dict = {
     #     "Локация": resp['data']['location'],
