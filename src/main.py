@@ -1,4 +1,5 @@
 # import json
+import json
 
 from aiohttp import ClientSession
 from fastapi import Depends
@@ -101,7 +102,9 @@ async def handle_webhook(update: Update, client_session: ClientSession = Depends
         print(f"{answer}")
         # answer.dict()
         # answer = answer.dict(include={'confirmed', 'recovered', 'deaths', 'location'})
-        # answer = json.dumps(answer, indent=2, ensure_ascii=False,)
+        answer = json.dumps(answer, indent=2, sort_keys=True, ensure_ascii=False)
+        print(type(answer))
+        print(f"{answer}")
 
     # text = update.json(indent=4, sort_keys=True)
     # text = json.dumps(answ, indent=2, ensure_ascii=False)
