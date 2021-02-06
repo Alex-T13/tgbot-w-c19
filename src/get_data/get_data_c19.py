@@ -1,4 +1,3 @@
-# import json
 from typing import Optional
 from aiohttp import ClientSession
 from fastapi import status
@@ -23,21 +22,6 @@ class Cv19Stat(BaseModel):
     data: Cv19Data = Field(...)
 
 
-# class Cv19Response(Cv19Data):
-#     location: lo = Field(...)
-#     confirmed = Field(...)
-#     recovered = Field(...)
-#     deaths = Field(...)
-
-# class Config:
-#     fields = {
-#         "location": "Локация",
-#         "confirmed": "Заболевших",
-#         "recovered": "Выздоровевших",
-#         "deaths": "Умерших",
-#     }
-
-
 async def get_cv19_data(
         session: ClientSession, p_country: Optional[str] = None):  # -> Optional[Cv19Data]:   # Optional[str]:
     if not p_country:
@@ -58,40 +42,21 @@ async def get_cv19_data(
 
         return None
 
-    print(f"{type(response)} из get_data_cv")
-
     payload = await response.json()
-
-    print(f"{type(payload)} из get_data_cv payload")
-    print(f"{payload} из get_data_cv payload")
 
     obj_format = Cv19Stat(**payload).data
 
-    print(f"{type(obj_format)} из get_data_cv obj_format")
-    print(f"{obj_format} из get_data_cv obj_format")
+    # print(f"{type(obj_format)} из get_data_cv obj_format")
+    # print(f"{obj_format} из get_data_cv obj_format")
 
-    # obj_format_2 = Cv19Data(**obj_format)
+    obj_json_str = obj_format.json(exclude={'lastChecked', 'lastReported'}, ident=2)  # by_alias
 
-    obj_json_str = obj_format.json(exclude={'lastChecked', 'lastReported'})  # by_alias
-
-    for r in (("confirmed", "Заболевших"), ("recovered", "Выздоровевших"),
-              ("deaths", "Умерших"), ("location", "Локация")):
+    for r in (("confirmed", "Заболело"), ("recovered", "Выздоровело"),
+              ("deaths", "Умерло"), ("location", "Локация"), ("Global", "Весь мир"),
+              ("Belarus", "Беларусь"), ("Russia", "Россия"), ("US", "США")):
         obj_json_str = obj_json_str.replace(*r)
 
-    print(f"{type(obj_json_str)} из get_data_cv obj_format_json")
-    print(f"{obj_json_str} из get_data_cv obj_format_json")
+    # print(f"{type(obj_json_str)} из get_data_cv obj_format_json")
+    # print(f"{obj_json_str} из get_data_cv obj_format_json")
 
-    # payload2 = Cv19Stat(payload)
-
-    # res_dict = {
-    #     "Локация": res_json['data']['location'],
-    #     "Заболели": res_json['data']['confirmed'],
-    #     "Выздоровели": res_json['data']['recovered'],
-    #     "Умерли": res_json['data']['deaths'],
-    # }
-    # # payload = await res_dict.json()
-    # payload = json.dumps(res_dict, indent=2, ensure_ascii=False)
-
-    # print(payload)
-    # payload = payload.dict(include={'confirmed', 'recovered', 'deaths', 'location'})
     return obj_json_str
