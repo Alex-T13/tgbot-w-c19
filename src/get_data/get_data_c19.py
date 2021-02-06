@@ -64,7 +64,7 @@ async def get_cv19_data(
     print(f"{type(payload)} из get_data_cv payload")
     print(f"{payload} из get_data_cv payload")
 
-    obj_format = Cv19Stat(**payload)
+    obj_format = Cv19Data(**payload)
 
     print(f"{type(obj_format)} из get_data_cv obj_format")
     print(f"{obj_format} из get_data_cv obj_format")
