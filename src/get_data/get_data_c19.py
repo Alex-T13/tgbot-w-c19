@@ -60,6 +60,7 @@ async def get_cv19_data(
 
     print(f"{type(response)} из get_data_cv")
     payload = await response.json()
+    print(f"{type(payload)} из get_data_cv payload")
     # payload = payload['data']
 
     # resp_cv19_dict = {
