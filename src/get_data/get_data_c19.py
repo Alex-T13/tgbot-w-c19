@@ -1,9 +1,10 @@
-# import json
+import json
 from typing import Optional, Dict
 from aiohttp import ClientSession
 from fastapi import status
 from pydantic import Field
 from pydantic.main import BaseModel
+from pydantic import BaseModel
 from custom_logging import logger
 
 
@@ -59,9 +60,14 @@ async def get_cv19_data(
         return None
 
     print(f"{type(response)} из get_data_cv")
-    payload: Cv19Stat = await response.json()    # await
+    # response.
+    payload = await response.json()    # await Cv19Stat
     print(f"{type(payload)} из get_data_cv payload")
-    payload2 = payload.json(include={'confirmed', 'recovered', 'deaths', 'location'})
+    # payload1 =
+
+    # payload2 = payload.json(include={'confirmed', 'recovered', 'deaths', 'location'})
+
+    payload2 = json.loads(payload, object_hook=Cv19Stat)
     print(f"{type(payload2)} из get_data_cv payload")
     print(f"{payload2} из get_data_cv payload")
 
