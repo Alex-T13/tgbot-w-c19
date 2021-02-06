@@ -8,12 +8,12 @@ from custom_logging import logger
 
 
 class Cv19Data(BaseModel):
-    recovered_: int = Field(..., alias="Выздоровевших")
-    deaths_: int = Field(..., alias="Умерших")
-    confirmed_: int = Field(..., alias="Заболевших")
+    recovered: int = Field(...)  # alias="Выздоровевших"
+    deaths: int = Field(...)
+    confirmed: int = Field(...)
     lastChecked: Optional[str] = Field(default=None)  # "2021-02-05T14:22:01+00:00",
     lastReported: Optional[str] = Field(default=None)  # "2021-02-05T05:22:38+00:00",
-    location_: str = Field(..., alias="Локация")
+    location: str = Field(...)
 
 
 class Cv19Stat(BaseModel):
@@ -29,17 +29,17 @@ class Cv19Stat(BaseModel):
 #     recovered = Field(...)
 #     deaths = Field(...)
 
-    # class Config:
-    #     fields = {
-    #         "location": "Локация",
-    #         "confirmed": "Заболевших",
-    #         "recovered": "Выздоровевших",
-    #         "deaths": "Умерших",
-    #     }
+# class Config:
+#     fields = {
+#         "location": "Локация",
+#         "confirmed": "Заболевших",
+#         "recovered": "Выздоровевших",
+#         "deaths": "Умерших",
+#     }
 
 
 async def get_cv19_data(
-        session: ClientSession, p_country: Optional[str] = None):  #  -> Optional[Cv19Data]:   # Optional[str]:
+        session: ClientSession, p_country: Optional[str] = None):  # -> Optional[Cv19Data]:   # Optional[str]:
     if not p_country:
         url = "https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total"
     else:
@@ -72,10 +72,14 @@ async def get_cv19_data(
 
     # obj_format_2 = Cv19Data(**obj_format)
 
-    obj_format_json = obj_format.json(exclude={'lastChecked', 'lastReported'}, by_alias=True)  # by_alias
+    obj_json_str = obj_format.json(exclude={'lastChecked', 'lastReported'})  # by_alias
 
-    print(f"{type(obj_format_json)} из get_data_cv obj_format_json")
-    print(f"{obj_format_json} из get_data_cv obj_format_json")
+    for r in (("confirmed", "Заболевших"), ("recovered", "Выздоровевших"),
+              ("deaths", "Умерших"), ("location", "Локация")):
+        obj_json_str = obj_json_str.replace(*r)
+
+    print(f"{type(obj_json_str)} из get_data_cv obj_format_json")
+    print(f"{obj_json_str} из get_data_cv obj_format_json")
 
     # payload2 = Cv19Stat(payload)
 
@@ -90,4 +94,4 @@ async def get_cv19_data(
 
     # print(payload)
     # payload = payload.dict(include={'confirmed', 'recovered', 'deaths', 'location'})
-    return obj_format_json
+    return obj_json_str
