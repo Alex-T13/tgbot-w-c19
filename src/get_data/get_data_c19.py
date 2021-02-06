@@ -20,7 +20,7 @@ class Cv19Stat(BaseModel):
     error: bool = Field(...)  # false,
     statusCode: int = Field(...)  # 200,
     message: str = Field(...)  # "OK",
-    data: Optional[Cv19Data] = Field(default=None)
+    data: Cv19Data = Field(...)
 
 
 # class Cv19Response(Cv19Data):
@@ -62,6 +62,7 @@ async def get_cv19_data(
     # response.
     payload = await response.json()  # response.json()    # await Cv19Stat
     print(f"{type(payload)} из get_data_cv payload")
+    print(f"{payload} из get_data_cv payload")
 
     obj_format = Cv19Stat(**payload)
 
