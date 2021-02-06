@@ -58,8 +58,6 @@ async def get_cv19_data(
         obj_json_str = obj_json_str.replace(*r)
 
     # print(f"{obj_json_str} из get_data_cv obj_format_json")
-
     # print(f"{type(obj_json_str)} из get_data_cv obj_format_json")
-    # print(f"{obj_json_str} из get_data_cv obj_format_json")
 
     return obj_json_str
