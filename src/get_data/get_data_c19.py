@@ -91,7 +91,7 @@ async def get_cv19_data(
 
     # obj_format_2 = Cv19Data(**obj_format)
 
-    obj_format_json = obj_format.json()
+    obj_format_json = obj_format.json(exclude={'lastChecked', 'lastReported'})
 
     print(f"{type(obj_format_json)} из get_data_cv obj_format_json")
     print(f"{obj_format_json} из get_data_cv obj_format_json")
