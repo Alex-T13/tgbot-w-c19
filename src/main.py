@@ -93,15 +93,18 @@ async def handle_webhook(update: Update, client_session: ClientSession = Depends
     update_massage = update.message if update.message is not None else update.edited_message
     if not update_massage.entities:
         # print(f"{update_massage} entities is None")
-        answ = choice_of_answer(update_massage.text)
+        answer = choice_of_answer(update_massage.text)
     else:
         # print(f"{update_massage} entities is try")
-        answ = await select_event_of_command(client_session, update_massage.text)
+        answer = await select_event_of_command(client_session, update_massage.text)
+        answer = answer.data.json(indent=2, ensure_ascii=False)
         # print(f"{answ} entities is try")
     # text = update.json(indent=4, sort_keys=True)
+    # text = json.dumps(answ, indent=2, ensure_ascii=False)
+    # text2 = text.
     # print(update_massage)
     msg = await send_message(client_session, chat_id=update_massage.chat.id,
-                             text=json.dumps(answ.data.Config, indent=2, ensure_ascii=False),)   # sort_keys=True, ensure_ascii=False),)
+                             text=answer,)   # sort_keys=True, ensure_ascii=False),)
     logger.debug(msg.json(indent=2, sort_keys=True))
 
 

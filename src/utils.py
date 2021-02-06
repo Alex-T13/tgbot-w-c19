@@ -1,5 +1,6 @@
 from aiohttp import ClientSession
-from get_data.get_data_c19 import get_cv19_data
+from typing import Optional, Coroutine, Any, Union
+from get_data.get_data_c19 import get_cv19_data, Cv19Stat
 
 
 def choice_of_answer(ar: str):
@@ -18,7 +19,8 @@ def choice_of_answer(ar: str):
         return "Ok"
 
 
-def select_event_of_command(session: ClientSession, arg: str):
+def select_event_of_command(
+        session: ClientSession, arg: str) -> Coroutine[Any, Any, Optional[Cv19Stat]]:
     switcher = {
         "/covid19global": lambda: get_cv19_data(session),
         "/covid19blr": lambda: get_cv19_data(session, "Belarus"),
