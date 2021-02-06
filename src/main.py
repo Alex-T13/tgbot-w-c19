@@ -97,7 +97,7 @@ async def handle_webhook(update: Update, client_session: ClientSession = Depends
     else:
         # print(f"{update_massage} entities is try")
         answer = await select_event_of_command(client_session, update_massage.text)
-        answer = answer.data.json(indent=2, ensure_ascii=False)
+        answer = answer.json(indent=2, ensure_ascii=False)
         # print(f"{answ} entities is try")
     # text = update.json(indent=4, sort_keys=True)
     # text = json.dumps(answ, indent=2, ensure_ascii=False)
