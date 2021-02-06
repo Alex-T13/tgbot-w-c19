@@ -57,7 +57,7 @@ async def get_cv19_data(
               ("Belarus", "Беларусь"), ("Russia", "Россия"), ("US", "США")):
         obj_json_str = obj_json_str.replace(*r)
 
-    obj_json_str = json.dumps(obj_json_str, indent=2, sort_keys=True, nsure_ascii=False)
+    obj_json_str = json.dumps(obj_json_str, indent=2, sort_keys=True, ensure_ascii=False)
 
     # print(f"{type(obj_json_str)} из get_data_cv obj_format_json")
     # print(f"{obj_json_str} из get_data_cv obj_format_json")
