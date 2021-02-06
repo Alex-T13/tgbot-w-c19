@@ -19,3 +19,4 @@ jinja2 = "==2.11.2"
 pydantic = { extras = ["dotenv"], version = "==1.7.3" }
 python-multipart = "==0.0.5"
 uvicorn = { extras = ["standard"], version = "==0.13.3" }
+requests = "*"
