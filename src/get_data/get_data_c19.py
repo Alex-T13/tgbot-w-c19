@@ -8,39 +8,28 @@ from custom_logging import logger
 
 
 class Cv19Data(BaseModel):
-    recovered: int = Field(..., alias="conf")  # 241150,
-    deaths: int = Field(...)  # 1755,
-    confirmed: int = Field(...)  # 253413,
+    recovered_: int = Field(...)
+    deaths_: int = Field(...)
+    confirmed_: int = Field(...)
     lastChecked: Optional[str] = Field(default=None)  # "2021-02-05T14:22:01+00:00",
     lastReported: Optional[str] = Field(default=None)  # "2021-02-05T05:22:38+00:00",
-    location: str = Field(...)  # "Belarus"
+    location_: str = Field(...)
 
-    # class Config:
-    #     fields = {
-    #
-    #         "confirmed": "Заболевших",
-    #         "recovered": "Выздоровевших",
-    #         "deaths": "Умерших",
-    #         "location": "Локация",
-    #     }
+    class Config:
+        fields = {
+            "recovered_": "Выздоровевших",
+            "deaths_": "Умерших",
+            "confirmed_": "Заболевших",
+            "location_": "Локация",
+        }
 
 
 class Cv19Stat(BaseModel):
-    error: bool = Field(...)  # false,
-    statusCode: int = Field(...)  # 200,
-    message: str = Field(...)  # "OK",
+    error: bool = Field(...)
+    statusCode: int = Field(...)
+    message: str = Field(...)
     data: Cv19Data = Field(...)
 
-# {'error': False,
-#  'statusCode': 200,
-#  'message': 'OK',
-#  'data':
-#      {'recovered': 243144,
-#       'deaths': 1764,
-#       'confirmed': 255172,
-#       'lastChecked': '2021-02-06T11:22:01+00:00',
-#       'lastReported': '2021-02-06T05:23:55+00:00',
-#       'location': 'Belarus'}}
 
 # class Cv19Response(Cv19Data):
 #     location: lo = Field(...)
@@ -91,7 +80,7 @@ async def get_cv19_data(
 
     # obj_format_2 = Cv19Data(**obj_format)
 
-    obj_format_json = obj_format.json(exclude={'lastChecked', 'lastReported'}, by_alias=True)
+    obj_format_json = obj_format.json(exclude={'lastChecked', 'lastReported'})  # by_alias
 
     print(f"{type(obj_format_json)} из get_data_cv obj_format_json")
     print(f"{obj_format_json} из get_data_cv obj_format_json")
