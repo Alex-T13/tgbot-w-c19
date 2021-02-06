@@ -1,3 +1,4 @@
+import json
 from typing import Optional
 from aiohttp import ClientSession
 from fastapi import status
@@ -49,12 +50,14 @@ async def get_cv19_data(
     # print(f"{type(obj_format)} из get_data_cv obj_format")
     # print(f"{obj_format} из get_data_cv obj_format")
 
-    obj_json_str = obj_format.json(exclude={'lastChecked', 'lastReported'}, ident=2)  # by_alias
+    obj_json_str = obj_format.json(exclude={'lastChecked', 'lastReported'})  # by_alias
 
     for r in (("confirmed", "Заболело"), ("recovered", "Выздоровело"),
               ("deaths", "Умерло"), ("location", "Локация"), ("Global", "Весь мир"),
               ("Belarus", "Беларусь"), ("Russia", "Россия"), ("US", "США")):
         obj_json_str = obj_json_str.replace(*r)
+
+    obj_json_str = json.dumps(obj_json_str, indent=2, sort_keys=True)
 
     # print(f"{type(obj_json_str)} из get_data_cv obj_format_json")
     # print(f"{obj_json_str} из get_data_cv obj_format_json")
