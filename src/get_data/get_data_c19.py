@@ -1,3 +1,4 @@
+# import json
 from typing import Optional
 from aiohttp import ClientSession
 from fastapi import status
@@ -74,7 +75,8 @@ async def get_cv19_data(
     #     "Выздоровели": resp['data']['recovered'],
     #     "Умерли": resp['data']['deaths'],
     # }
-    # result = json.dumps(resp_cv19_dict, indent=2, ensure_ascii=False)
+    # result = json.dumps(response, indent=2, ensure_ascii=False)
+    # result = result.d
 
     # print(payload)
     return payload
