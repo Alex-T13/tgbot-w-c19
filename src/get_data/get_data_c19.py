@@ -1,4 +1,4 @@
-import json
+# import json
 from typing import Optional
 from aiohttp import ClientSession
 from fastapi import status
@@ -7,20 +7,20 @@ from pydantic.main import BaseModel
 from custom_logging import logger
 
 
-# class Cv19Data(BaseModel):
-#     confirmed: Optional[int] = Field(default=None, alias="Заболевших")  # 253413,
-#     recovered: Optional[int] = Field(default=None, alias="Выздоровевших")  # 241150,
-#     deaths: Optional[int] = Field(default=None, alias="Умерших")  # 1755,
-#     lastChecked: Optional[str] = Field(default=None)  # "2021-02-05T14:22:01+00:00",
-#     lastReported: Optional[str] = Field(default=None)  # "2021-02-05T05:22:38+00:00",
-#     location: Optional[str] = Field(default=None, alias="Локация")  # "Belarus"
-#
-#
-# class Cv19Stat(BaseModel):
-#     error: bool = Field(...)  # false,
-#     statusCode: int = Field(...)  # 200,
-#     message: str = Field(...)  # "OK",
-#     data: Optional[Cv19Data] = Field(default=None)
+class Cv19Data(BaseModel):
+    confirmed: Optional[int] = Field(default=None, alias="Заболевших")  # 253413,
+    recovered: Optional[int] = Field(default=None, alias="Выздоровевших")  # 241150,
+    deaths: Optional[int] = Field(default=None, alias="Умерших")  # 1755,
+    lastChecked: Optional[str] = Field(default=None)  # "2021-02-05T14:22:01+00:00",
+    lastReported: Optional[str] = Field(default=None)  # "2021-02-05T05:22:38+00:00",
+    location: Optional[str] = Field(default=None, alias="Локация")  # "Belarus"
+
+
+class Cv19Stat(BaseModel):
+    error: bool = Field(...)  # false,
+    statusCode: int = Field(...)  # 200,
+    message: str = Field(...)  # "OK",
+    data: Optional[Cv19Data] = Field(default=None)
 
 
 # class Cv19Response(Cv19Data):
@@ -39,7 +39,7 @@ from custom_logging import logger
 
 
 async def get_cv19_data(
-        session: ClientSession, p_country: Optional[str] = None) -> Optional[str]:  # Optional[Cv19Stat]:
+        session: ClientSession, p_country: Optional[str] = None):  # -> Optional[str]:   # Optional[str]:
     if not p_country:
         url = "https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total"
     else:
@@ -60,27 +60,26 @@ async def get_cv19_data(
 
     print(f"{type(response)} из get_data_cv")
     # response.
-    res_json = await response.json()  # response.json()    # await Cv19Stat
-    print(f"{type(res_json)} из get_data_cv payload")
-    # payload1 =
+    payload = await response.json()  # response.json()    # await Cv19Stat
+    print(f"{type(payload)} из get_data_cv payload")
 
-    # payload2 = payload.json(include={'confirmed', 'recovered', 'deaths', 'location'})
+    obj_format = Cv19Stat(**payload)
+    obj_format_json = obj_format.json(include={'confirmed', 'recovered', 'deaths', 'location'}, by_alias=True)
 
-    # payload2 = json.dumps(payload, object_hook=Cv19Stat)
-    # print(f"{type(payload)} из get_data_cv payload")
-    print(f"{res_json} из get_data_cv payload")
+    print(f"{type(obj_format_json)} из get_data_cv payload")
+    print(f"{obj_format_json} из get_data_cv payload")
 
     # payload2 = Cv19Stat(payload)
 
-    res_dict = {
-        "Локация": res_json['data']['location'],
-        "Заболели": res_json['data']['confirmed'],
-        "Выздоровели": res_json['data']['recovered'],
-        "Умерли": res_json['data']['deaths'],
-    }
-    # payload = await res_dict.json()
-    payload = json.dumps(res_dict, indent=2, ensure_ascii=False)
+    # res_dict = {
+    #     "Локация": res_json['data']['location'],
+    #     "Заболели": res_json['data']['confirmed'],
+    #     "Выздоровели": res_json['data']['recovered'],
+    #     "Умерли": res_json['data']['deaths'],
+    # }
+    # # payload = await res_dict.json()
+    # payload = json.dumps(res_dict, indent=2, ensure_ascii=False)
 
     # print(payload)
     # payload = payload.dict(include={'confirmed', 'recovered', 'deaths', 'location'})
-    return payload
+    return obj_format_json

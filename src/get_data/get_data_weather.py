@@ -1,34 +1,141 @@
 import json
-from typing import Optional
-import requests
+from typing import Optional, List
+from aiohttp import ClientSession
+from fastapi import status
+from pydantic import Field
+from pydantic.main import BaseModel
+from custom_logging import logger
 
 
-def get_weather_data(p_country: Optional[str] = None):  # -> Cv19StatData:  session: ClientSession
-    url = "https://api.openweathermap.org/data/2.5/weather"
-    querystring = {
-        "id": 625144,
-        "appid": "d8401dcbd228a0cecc87e84e2f65af62",
-        "units": "metric",
-        "lang": "ru",
+class CoordW(BaseModel):
+    lon: float = Field(...)
+    lat: float = Field(...)
+
+
+class Weather(BaseModel):
+    id: int = Field(...)
+    main: Optional[str] = Field(default=None)
+    description: Optional[str] = Field(default=None)  # облачно
+    icon: Optional[str] = Field(default=None)
+
+
+class MainW(BaseModel):
+    temp: int = Field(...)
+    feels_like: float = Field(...)
+    temp_min: int = Field(...)
+    temp_max: int = Field(...)
+    pressure: int = Field(...)
+    humidity: int = Field(...)
+
+
+class WindW(BaseModel):
+    speed: Optional[int] = Field(default=None)
+    deg: Optional[int] = Field(default=None)
+
+
+class CloudsW(BaseModel):
+    all: Optional[int] = Field(default=None)
+
+
+class SysW(BaseModel):
+    type: Optional[int] = Field(default=None)
+    id: int = Field(...)
+    country: str = Field(...)
+    sunrise: Optional[str] = Field(default=None)
+    sunset: Optional[str] = Field(default=None)
+
+
+class WeatherData(BaseModel):
+    coord: Optional[CoordW] = Field(default=None)
+    weather: List[Weather] = Field(default_factory=list)
+    base: Optional[str] = Field(default=None)
+    main: MainW = Field(...)
+    visibility: Optional[int] = Field(default=None)
+    wind: Optional[WindW] = Field(default=None)
+    clouds: Optional[CloudsW] = Field(default=None)
+    dt: Optional[int] = Field(default=None)
+    sys: SysW = Field(...)
+    timezone: int = Field(...)
+    id: int = Field(...)
+    name: Optional[int] = Field(default=None)  # "Минск",
+    cod: 200
+
+
+
+# class Cv19Data(BaseModel):
+#     confirmed: Optional[int] = Field(default=None, alias="Заболевших")  # 253413,
+#     recovered: Optional[int] = Field(default=None, alias="Выздоровевших")  # 241150,
+#     deaths: Optional[int] = Field(default=None, alias="Умерших")  # 1755,
+#     lastChecked: Optional[str] = Field(default=None)  # "2021-02-05T14:22:01+00:00",
+#     lastReported: Optional[str] = Field(default=None)  # "2021-02-05T05:22:38+00:00",
+#     location: Optional[str] = Field(default=None, alias="Локация")  # "Belarus"
+#
+#
+# class Cv19Stat(BaseModel):
+#     error: bool = Field(...)  # false,
+#     statusCode: int = Field(...)  # 200,
+#     message: str = Field(...)  # "OK",
+#     data: Optional[Cv19Data] = Field(default=None)
+
+
+# class Cv19Response(Cv19Data):
+#     location: lo = Field(...)
+#     confirmed = Field(...)
+#     recovered = Field(...)
+#     deaths = Field(...)
+
+    # class Config:
+    #     fields = {
+    #         "location": "Локация",
+    #         "confirmed": "Заболевших",
+    #         "recovered": "Выздоровевших",
+    #         "deaths": "Умерших",
+    #     }
+
+
+async def get_cv19_data(
+        session: ClientSession, p_country: Optional[str] = None) -> Optional[str]:  # Optional[Cv19Stat]:
+    if not p_country:
+        url = "https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total"
+    else:
+        url = f"https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total?country={p_country}"
+    headers = {
+        'x-rapidapi-key': "8171e78a27mshe06f34e09766f70p1b5a9djsnf7011598a514",
+        'x-rapidapi-host': "covid-19-coronavirus-statistics.p.rapidapi.com"
     }
-    resp = requests.get(url, params=querystring)
+    response = await session.get(url, headers=headers)
 
-    if resp.status_code != 200:
-        return f"response content error: {resp.text}"
-    resp = resp.json()
+    if response.status != status.HTTP_200_OK:
+        # print(response.status, response.text())
+        logger.warning("telegram api call failed: %s", response)
+        body = await response.text()
+        logger.debug(body)
 
-    resp_weather_dict = {
-    #     "Локация": resp['data']['location'],
-    #     "Заболели": resp['data']['confirmed'],
-    #     "Выздоровели": resp['data']['recovered'],
-    #     "Умерли": resp['data']['deaths'],
-    # }
-    # result = json.dumps(resp_cv19_dict, indent=2, ensure_ascii=False)
-    # print(result)
-    return result
+        return None
 
+    print(f"{type(response)} из get_data_cv")
+    # response.
+    res_json = await response.json()  # response.json()    # await Cv19Stat
+    print(f"{type(res_json)} из get_data_cv payload")
+    # payload1 =
 
-# country = "Belarus"
-#
-#
-# get_cv19_data(country)
+    # payload2 = payload.json(include={'confirmed', 'recovered', 'deaths', 'location'})
+
+    # payload2 = json.dumps(payload, object_hook=Cv19Stat)
+    # print(f"{type(payload)} из get_data_cv payload")
+    print(f"{res_json} из get_data_cv payload")
+
+    # payload2 = Cv19Stat(payload)
+
+    res_dict = {
+        "Локация": res_json['data']['location'],
+        "Заболели": res_json['data']['confirmed'],
+        "Выздоровели": res_json['data']['recovered'],
+        "Умерли": res_json['data']['deaths'],
+    }
+    # payload = await res_dict.json()
+    payload = json.dumps(res_dict, indent=2, ensure_ascii=False)
+
+    # print(payload)
+    # payload = payload.dict(include={'confirmed', 'recovered', 'deaths', 'location'})
+    return payload
