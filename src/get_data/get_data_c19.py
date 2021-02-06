@@ -8,9 +8,9 @@ from custom_logging import logger
 
 
 class Cv19Data(BaseModel):
-    confirmed: Optional[int] = Field(default=None, alias="Заболевших")  # 253413,
     recovered: Optional[int] = Field(default=None, alias="Выздоровевших")  # 241150,
     deaths: Optional[int] = Field(default=None, alias="Умерших")  # 1755,
+    confirmed: Optional[int] = Field(default=None, alias="Заболевших")  # 253413,
     lastChecked: Optional[str] = Field(default=None)  # "2021-02-05T14:22:01+00:00",
     lastReported: Optional[str] = Field(default=None)  # "2021-02-05T05:22:38+00:00",
     location: Optional[str] = Field(default=None, alias="Локация")  # "Belarus"
@@ -22,6 +22,16 @@ class Cv19Stat(BaseModel):
     message: str = Field(...)  # "OK",
     data: Cv19Data = Field(...)
 
+# {'error': False,
+#  'statusCode': 200,
+#  'message': 'OK',
+#  'data':
+#      {'recovered': 243144,
+#       'deaths': 1764,
+#       'confirmed': 255172,
+#       'lastChecked': '2021-02-06T11:22:01+00:00',
+#       'lastReported': '2021-02-06T05:23:55+00:00',
+#       'location': 'Belarus'}}
 
 # class Cv19Response(Cv19Data):
 #     location: lo = Field(...)
@@ -64,12 +74,12 @@ async def get_cv19_data(
     print(f"{type(payload)} из get_data_cv payload")
     print(f"{payload} из get_data_cv payload")
 
-    obj_format = Cv19Data(**payload)
+    obj_format = Cv19Stat(**payload)
 
     print(f"{type(obj_format)} из get_data_cv obj_format")
     print(f"{obj_format} из get_data_cv obj_format")
 
-    obj_format_json = obj_format.json()
+    obj_format_json = obj_format.json(by_alias=True)
 
     print(f"{type(obj_format_json)} из get_data_cv obj_format_json")
     print(f"{obj_format_json} из get_data_cv obj_format_json")
