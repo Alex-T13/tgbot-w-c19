@@ -8,20 +8,12 @@ from custom_logging import logger
 
 
 class Cv19Data(BaseModel):
-    recovered_: int = Field(...)
-    deaths_: int = Field(...)
-    confirmed_: int = Field(...)
+    recovered_: int = Field(..., alias="Выздоровевших")
+    deaths_: int = Field(..., alias="Умерших")
+    confirmed_: int = Field(..., alias="Заболевших")
     lastChecked: Optional[str] = Field(default=None)  # "2021-02-05T14:22:01+00:00",
     lastReported: Optional[str] = Field(default=None)  # "2021-02-05T05:22:38+00:00",
-    location_: str = Field(...)
-
-    class Config:
-        fields = {
-            "recovered_": "Выздоровевших",
-            "deaths_": "Умерших",
-            "confirmed_": "Заболевших",
-            "location_": "Локация",
-        }
+    location_: str = Field(..., alias="Локация")
 
 
 class Cv19Stat(BaseModel):
@@ -80,7 +72,7 @@ async def get_cv19_data(
 
     # obj_format_2 = Cv19Data(**obj_format)
 
-    obj_format_json = obj_format.json(exclude={'lastChecked', 'lastReported'})  # by_alias
+    obj_format_json = obj_format.json(exclude={'lastChecked', 'lastReported'}, by_alias=True)  # by_alias
 
     print(f"{type(obj_format_json)} из get_data_cv obj_format_json")
     print(f"{obj_format_json} из get_data_cv obj_format_json")
