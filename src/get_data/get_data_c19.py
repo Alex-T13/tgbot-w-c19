@@ -1,5 +1,5 @@
 # import json
-from typing import Optional
+from typing import Optional, Dict
 from aiohttp import ClientSession
 from fastapi import status
 from pydantic import Field
@@ -59,9 +59,10 @@ async def get_cv19_data(
         return None
 
     print(f"{type(response)} из get_data_cv")
-    payload = await response.json()
+    payload: Cv19Stat = await response.json()    # await
     print(f"{type(payload)} из get_data_cv payload")
-    # payload = payload['data']
+
+    # payload2 = Cv19Stat(payload)
 
     # resp_cv19_dict = {
     #     "Локация": resp['data']['location'],
