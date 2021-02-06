@@ -68,7 +68,7 @@ async def get_cv19_data(
     print(f"{type(obj_format)} из get_data_cv obj_format")
     print(f"{obj_format} из get_data_cv obj_format")
 
-    obj_format_json = obj_format.json(include={'data.confirmed'})
+    obj_format_json = obj_format.json(include={'data''confirmed'})
 
     print(f"{type(obj_format_json)} из get_data_cv obj_format_json")
     print(f"{obj_format_json} из get_data_cv obj_format_json")
