@@ -61,6 +61,9 @@ async def get_cv19_data(
     print(f"{type(response)} из get_data_cv")
     payload: Cv19Stat = await response.json()    # await
     print(f"{type(payload)} из get_data_cv payload")
+    payload2 = payload.json(include={'confirmed', 'recovered', 'deaths', 'location'})
+    print(f"{type(payload2)} из get_data_cv payload")
+    print(f"{payload2} из get_data_cv payload")
 
     # payload2 = Cv19Stat(payload)
 
