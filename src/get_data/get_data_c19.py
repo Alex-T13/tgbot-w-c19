@@ -9,11 +9,19 @@ from custom_logging import logger
 
 class Cv19Data(BaseModel):
     recovered: Optional[int] = Field(default=None)  # 241150,
-    deaths: Optional[int] = Field(default=None, alias="Умерших")  # 1755,
-    confirmed: Optional[int] = Field(default=None, alias="Заболевших")  # 253413,
+    deaths: Optional[int] = Field(default=None)  # 1755,
+    confirmed: Optional[int] = Field(default=None)  # 253413,
     lastChecked: Optional[str] = Field(default=None)  # "2021-02-05T14:22:01+00:00",
     lastReported: Optional[str] = Field(default=None)  # "2021-02-05T05:22:38+00:00",
-    location: Optional[str] = Field(default=None, alias="Локация")  # "Belarus"
+    location: Optional[str] = Field(default=None)  # "Belarus"
+
+    class Config:
+        fields = {
+            "location": "Локация",
+            "confirmed": "Заболевших",
+            "recovered": "Выздоровевших",
+            "deaths": "Умерших",
+        }
 
 
 class Cv19Stat(BaseModel):
@@ -49,7 +57,7 @@ class Cv19Stat(BaseModel):
 
 
 async def get_cv19_data(
-        session: ClientSession, p_country: Optional[str] = None):  # -> Optional[str]:   # Optional[str]:
+        session: ClientSession, p_country: Optional[str] = None):  #  -> Optional[Cv19Data]:   # Optional[str]:
     if not p_country:
         url = "https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total"
     else:
@@ -69,8 +77,9 @@ async def get_cv19_data(
         return None
 
     print(f"{type(response)} из get_data_cv")
-    # response.
-    payload = await response.json()  # response.json()    # await Cv19Stat
+
+    payload = await response.json()
+
     print(f"{type(payload)} из get_data_cv payload")
     print(f"{payload} из get_data_cv payload")
 
@@ -79,7 +88,7 @@ async def get_cv19_data(
     print(f"{type(obj_format)} из get_data_cv obj_format")
     print(f"{obj_format} из get_data_cv obj_format")
 
-    obj_format_json = obj_format.json(by_alias=True)
+    obj_format_json = obj_format.data.json(exclude={"lastChecked", "lastReported"})
 
     print(f"{type(obj_format_json)} из get_data_cv obj_format_json")
     print(f"{obj_format_json} из get_data_cv obj_format_json")
