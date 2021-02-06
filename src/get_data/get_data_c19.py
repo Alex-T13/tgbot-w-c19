@@ -8,7 +8,7 @@ from custom_logging import logger
 
 
 class Cv19Data(BaseModel):
-    recovered: Optional[int] = Field(default=None, alias="Выздоровевших")  # 241150,
+    recovered: Optional[int] = Field(default=None)  # 241150,
     deaths: Optional[int] = Field(default=None, alias="Умерших")  # 1755,
     confirmed: Optional[int] = Field(default=None, alias="Заболевших")  # 253413,
     lastChecked: Optional[str] = Field(default=None)  # "2021-02-05T14:22:01+00:00",
