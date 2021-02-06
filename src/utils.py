@@ -1,6 +1,6 @@
 from aiohttp import ClientSession
 from typing import Optional, Coroutine, Any, Union
-from get_data.get_data_c19 import get_cv19_data, Cv19Stat
+from get_data.get_data_c19 import get_cv19_data
 
 
 def choice_of_answer(ar: str):
