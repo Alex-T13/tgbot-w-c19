@@ -87,7 +87,7 @@ class WeatherData(BaseModel):
 
 async def get_weather_data(session: ClientSession) -> Optional[str]:
     url = "https://api.openweathermap.org/data/2.5/weather?id=625144&appid=d8401dcbd228a0cecc87e84e2f65af62&units" \
-          "=metric&lang=ru "
+          "=metric&lang=ru"
 
     response = await session.get(url)
 
