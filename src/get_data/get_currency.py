@@ -29,9 +29,9 @@ async def get_currency(session: ClientSession, ):
     }
 
     for key in cur_dict:
-        print(cur_dict[key])
+        # print(cur_dict[key])
         cur_filter = list(filter(lambda cur: cur['Cur_ID'] == cur_dict.get(key), payload))[-1]['Cur_OfficialRate']
-        print(cur_filter)
+        # print(cur_filter)
         # print(cur_filter[-1]['Cur_OfficialRate'])
         cur_dict[key] = cur_filter
 
