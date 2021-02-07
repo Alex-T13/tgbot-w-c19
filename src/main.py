@@ -1,6 +1,3 @@
-# import json
-import json
-
 from aiohttp import ClientSession
 from fastapi import Depends
 from fastapi import FastAPI
@@ -98,17 +95,11 @@ async def handle_webhook(update: Update, client_session: ClientSession = Depends
     else:
         # print(f"{update_massage} entities is try")
         answer = await select_event_of_command(client_session, update_massage.text)
-        print(type(answer))
-        print(f"{answer}")
-        # answer.dict()
-        # answer = answer.dict(include={'confirmed', 'recovered', 'deaths', 'location'})
 
-    # text = update.json(indent=4, sort_keys=True)
-    # text = json.dumps(answ, indent=2, ensure_ascii=False)
-    # text2 = text.
-    # print(update_massage)
-    msg = await send_message(client_session, chat_id=update_massage.chat.id,
-                             text=answer,)   # sort_keys=True, ensure_ascii=False),)
+        # print(type(answer))
+        # print(f"{answer}")
+
+    msg = await send_message(client_session, chat_id=update_massage.chat.id, text=answer,)
     logger.debug(msg.json(indent=2, sort_keys=True))
 
 
