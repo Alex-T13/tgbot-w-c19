@@ -81,7 +81,7 @@ class WeatherData(BaseModel):
     sys: SysW = Field(...)
     timezone: int = Field(...)
     id: int = Field(...)
-    name: Optional[int] = Field(default=None)  # "Минск",
+    name: Optional[str] = Field(default=None)  # "Минск",
     cod: int = Field(...)
 
 
