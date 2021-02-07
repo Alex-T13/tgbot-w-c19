@@ -103,8 +103,8 @@ async def get_weather_data(session: ClientSession) -> Optional[str]:
 
     obj_format = WeatherData(**payload)
 
-    print(f"{type(obj_format)} из get_data obj_format")
-    print(f"{obj_format} из get_data obj_format")
+    # print(f"{type(obj_format)} из get_data obj_format")
+    # print(f"{obj_format} из get_data obj_format")
 
     obj_format_dict = {
         "Город": obj_format.name,
@@ -113,19 +113,12 @@ async def get_weather_data(session: ClientSession) -> Optional[str]:
         "Ощущается(C)": obj_format.main.feels_like,
         "Влажность(%)": obj_format.main.humidity,
         "Скорость ветра(м/с)": obj_format.wind.speed,
-        "Облачность": obj_format.clouds.all
+        "Облачность(%)": obj_format.clouds.all
     }
 
     obj_json_str = json.dumps(obj_format_dict, indent=2, ensure_ascii=False)
 
-            # .json(include={"weather"., 'lastReported'})  # by_alias
-
-    # for r in (("confirmed", "Заболело"), ("recovered", "Выздоровело"),
-    #           ("deaths", "Умерло"), ("location", "Локация"), ("Global", "Весь мир"),
-    #           ("Belarus", "Беларусь"), ("Russia", "Россия"), ("US", "США")):
-    #     obj_json_str = obj_json_str.replace(*r)
-
-    print(f"{obj_json_str} из get_data_cv obj_format_json")
-    print(f"{type(obj_json_str)} из get_data_cv obj_format_json")
+    # print(f"{obj_json_str} из get_data_cv obj_format_json")
+    # print(f"{type(obj_json_str)} из get_data_cv obj_format_json")
 
     return obj_json_str
