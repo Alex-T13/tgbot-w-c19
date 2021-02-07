@@ -37,6 +37,28 @@ class CloudsW(BaseModel):
     all: Optional[int] = Field(default=None)
 
 
+class RainW(BaseModel):
+    _1h: Optional[int] = Field(default=None)
+    _3h: Optional[int] = Field(default=None)
+
+    class Config:
+        fields = {
+            "_1h": "1h",
+            "_3h": "3h",
+        }
+
+
+class SnowW(BaseModel):
+    _1h: Optional[int] = Field(default=None)
+    _3h: Optional[int] = Field(default=None)
+
+    class Config:
+        fields = {
+            "_1h": "1h",
+            "_3h": "3h",
+        }
+
+
 class SysW(BaseModel):
     type: Optional[int] = Field(default=None)
     id: int = Field(...)
@@ -53,57 +75,20 @@ class WeatherData(BaseModel):
     visibility: Optional[int] = Field(default=None)
     wind: Optional[WindW] = Field(default=None)
     clouds: Optional[CloudsW] = Field(default=None)
+    rain: Optional[RainW] = Field(default=None)
+    snow: Optional[SnowW] = Field(default=None)
     dt: Optional[int] = Field(default=None)
     sys: SysW = Field(...)
     timezone: int = Field(...)
     id: int = Field(...)
     name: Optional[int] = Field(default=None)  # "Минск",
-    cod: 200
+    cod: int = Field(...)
 
 
+async def get_weather_data(session: ClientSession) -> Optional[str]:
+    url = "api.openweathermap.org/data/2.5/weather?id=625144&appid=d8401dcbd228a0cecc87e84e2f65af62&units=metric&lang=ru"
 
-# class Cv19Data(BaseModel):
-#     confirmed: Optional[int] = Field(default=None, alias="Заболевших")  # 253413,
-#     recovered: Optional[int] = Field(default=None, alias="Выздоровевших")  # 241150,
-#     deaths: Optional[int] = Field(default=None, alias="Умерших")  # 1755,
-#     lastChecked: Optional[str] = Field(default=None)  # "2021-02-05T14:22:01+00:00",
-#     lastReported: Optional[str] = Field(default=None)  # "2021-02-05T05:22:38+00:00",
-#     location: Optional[str] = Field(default=None, alias="Локация")  # "Belarus"
-#
-#
-# class Cv19Stat(BaseModel):
-#     error: bool = Field(...)  # false,
-#     statusCode: int = Field(...)  # 200,
-#     message: str = Field(...)  # "OK",
-#     data: Optional[Cv19Data] = Field(default=None)
-
-
-# class Cv19Response(Cv19Data):
-#     location: lo = Field(...)
-#     confirmed = Field(...)
-#     recovered = Field(...)
-#     deaths = Field(...)
-
-    # class Config:
-    #     fields = {
-    #         "location": "Локация",
-    #         "confirmed": "Заболевших",
-    #         "recovered": "Выздоровевших",
-    #         "deaths": "Умерших",
-    #     }
-
-
-async def get_cv19_data(
-        session: ClientSession, p_country: Optional[str] = None) -> Optional[str]:  # Optional[Cv19Stat]:
-    if not p_country:
-        url = "https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total"
-    else:
-        url = f"https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total?country={p_country}"
-    headers = {
-        'x-rapidapi-key': "8171e78a27mshe06f34e09766f70p1b5a9djsnf7011598a514",
-        'x-rapidapi-host': "covid-19-coronavirus-statistics.p.rapidapi.com"
-    }
-    response = await session.get(url, headers=headers)
+    response = await session.get(url)
 
     if response.status != status.HTTP_200_OK:
         # print(response.status, response.text())
@@ -113,29 +98,33 @@ async def get_cv19_data(
 
         return None
 
-    print(f"{type(response)} из get_data_cv")
-    # response.
-    res_json = await response.json()  # response.json()    # await Cv19Stat
-    print(f"{type(res_json)} из get_data_cv payload")
-    # payload1 =
+    payload = await response.json()
 
-    # payload2 = payload.json(include={'confirmed', 'recovered', 'deaths', 'location'})
+    obj_format = WeatherData(**payload)
 
-    # payload2 = json.dumps(payload, object_hook=Cv19Stat)
-    # print(f"{type(payload)} из get_data_cv payload")
-    print(f"{res_json} из get_data_cv payload")
+    print(f"{type(obj_format)} из get_data obj_format")
+    print(f"{obj_format} из get_data obj_format")
 
-    # payload2 = Cv19Stat(payload)
-
-    res_dict = {
-        "Локация": res_json['data']['location'],
-        "Заболели": res_json['data']['confirmed'],
-        "Выздоровели": res_json['data']['recovered'],
-        "Умерли": res_json['data']['deaths'],
+    obj_format_dict = {
+        "Город": obj_format.name,
+        "Погодные условия": obj_format.weather[-1].description,
+        "Температура(C)": obj_format.main.temp,
+        "Ощущается(C)": obj_format.main.feels_like,
+        "Влажность(%)": obj_format.main.humidity,
+        "Скорость ветра(м/с)": obj_format.wind.speed,
+        "Облачность": obj_format.clouds.all
     }
-    # payload = await res_dict.json()
-    payload = json.dumps(res_dict, indent=2, ensure_ascii=False)
 
-    # print(payload)
-    # payload = payload.dict(include={'confirmed', 'recovered', 'deaths', 'location'})
-    return payload
+    obj_json_str = json.dumps(obj_format_dict, indent=2, ensure_ascii=False)
+
+            # .json(include={"weather"., 'lastReported'})  # by_alias
+
+    # for r in (("confirmed", "Заболело"), ("recovered", "Выздоровело"),
+    #           ("deaths", "Умерло"), ("location", "Локация"), ("Global", "Весь мир"),
+    #           ("Belarus", "Беларусь"), ("Russia", "Россия"), ("US", "США")):
+    #     obj_json_str = obj_json_str.replace(*r)
+
+    print(f"{obj_json_str} из get_data_cv obj_format_json")
+    print(f"{type(obj_json_str)} из get_data_cv obj_format_json")
+
+    return obj_json_str

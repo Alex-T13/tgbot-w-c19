@@ -1,5 +1,6 @@
 from aiohttp import ClientSession
 from get_data.get_data_c19 import get_cv19_data
+from get_data.get_data_weather import get_weather_data
 
 
 def choice_of_answer(ar: str):
@@ -22,6 +23,7 @@ def select_event_of_command(
         "/covid19blr": lambda: get_cv19_data(session, "Belarus"),
         "/covid19rus": lambda: get_cv19_data(session, "Russia"),
         "/covid19usa": lambda: get_cv19_data(session, "USA"),
+        "/weather": lambda: get_weather_data(session),
     }
 
     return switcher[arg]()
