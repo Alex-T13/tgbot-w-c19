@@ -17,6 +17,10 @@ def main_switch_update(session: ClientSession, update_mass):
 
     for key in switch_dict:
         if switch_dict[key] in update_mass is not None:
+
+            print(switch_dict[key])
+            print(type(switch_dict[key]))
+
             return switch_dict[key]()
 
 
@@ -46,4 +50,6 @@ def select_event(session: ClientSession, arg: str):
     try:
         return switcher[arg]()
     except ValueError:
+        print("Не верный параметр bot-command")
+
         return "Не верный параметр bot-command"
