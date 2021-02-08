@@ -50,6 +50,7 @@ def select_event(session: ClientSession, arg: str):
     try:
         return switcher[arg]()
     except ValueError:
+
         print("Не верный параметр bot-command")
 
         return "Не верный параметр bot-command"
