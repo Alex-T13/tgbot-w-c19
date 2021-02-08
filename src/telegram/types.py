@@ -30,9 +30,24 @@ class MessageEntity(BaseModel):
     user: Optional[User] = Field(default=None)
 
 
+class ReplyToMessageId(BaseModel):
+    chat: Chat = Field(...)
+    date: int = Field(...)
+    entities: List[MessageEntity] = Field(default_factory=list)
+    from_: Optional[User] = Field(default=None)
+    message_id: int = Field(...)
+    text: Optional[str] = Field(default=None)
+
+    class Config:
+        fields = {
+            "from_": "from",
+        }
+
+
 class Message(BaseModel):
     chat: Chat = Field(...)
     date: int = Field(...)
+    reply_to_message_id: Optional[ReplyToMessageId] = Field(default=None)
     entities: List[MessageEntity] = Field(default_factory=list)
     from_: Optional[User] = Field(default=None)
     message_id: int = Field(...)
@@ -50,6 +65,7 @@ class EditedMessage(BaseModel):
     chat: Chat = Field(...)
     date: int = Field(...)
     edit_date: int = Field(...)
+    reply_to_message_id: Optional[ReplyToMessageId] = Field(default=None)
     entities: List[MessageEntity] = Field(default_factory=list)
     text: Optional[str] = Field(default=None)
 
