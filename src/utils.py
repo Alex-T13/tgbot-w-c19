@@ -16,13 +16,18 @@ def main_switch_update(session: ClientSession, update_mass):
     }
 
     for key in switch_dict:
-        if key in update_mass is not None:
+        if key in update_mass:
+            if update_mass.key is not None:
 
-            print(key)
-            print(type(key))
+                print(key)
+                print(type(key))
 
-            return switch_dict[key]()
+                return switch_dict[key]()
+            else:
+                print("key value is None")
+                return "key value is None"
         else:
+            print(key)
             return "Keys not found"
 
 
