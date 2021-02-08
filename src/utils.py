@@ -16,7 +16,7 @@ def main_switch_update(session: ClientSession, update_mass):
     }
 
     for key in switch_dict:
-        if switch_dict[key] in update_mass:
+        if switch_dict[key] in update_mass is not None:
             return switch_dict[key]()
 
 
