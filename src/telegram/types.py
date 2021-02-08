@@ -44,11 +44,20 @@ class ReplyToMessageId(BaseModel):
         }
 
 
+class Voice(BaseModel):
+    file_id: str = Field(...)
+    file_unique_id: str = Field(...)
+    duration: int = Field(...)
+    mime_type: Optional[str] = Field(default=None)
+    file_size: Optional[int] = Field(default=None)
+
+
 class Message(BaseModel):
     chat: Chat = Field(...)
     date: int = Field(...)
     reply_to_message_id: Optional[ReplyToMessageId] = Field(default=None)
     entities: List[MessageEntity] = Field(default_factory=list)
+    voice: Optional[Voice] = Field(default=None)
     from_: Optional[User] = Field(default=None)
     message_id: int = Field(...)
     text: Optional[str] = Field(default=None)
@@ -68,6 +77,7 @@ class EditedMessage(BaseModel):
     reply_to_message_id: Optional[ReplyToMessageId] = Field(default=None)
     entities: List[MessageEntity] = Field(default_factory=list)
     text: Optional[str] = Field(default=None)
+    voice: Optional[Voice] = Field(default=None)
 
     class Config:
         fields = {
