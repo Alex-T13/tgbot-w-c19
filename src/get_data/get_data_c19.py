@@ -3,6 +3,8 @@ from aiohttp import ClientSession
 from fastapi import status
 from pydantic import Field
 from pydantic.main import BaseModel
+
+from config import settings
 from custom_logging import logger
 
 
@@ -29,7 +31,7 @@ async def get_cv19_data(
     else:
         url = f"https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total?country={p_country}"
     headers = {
-        'x-rapidapi-key': "8171e78a27mshe06f34e09766f70p1b5a9djsnf7011598a514",
+        'x-rapidapi-key': f"{settings.x_rapidapi_key}",
         'x-rapidapi-host': "covid-19-coronavirus-statistics.p.rapidapi.com"
     }
     response = await session.get(url, headers=headers)

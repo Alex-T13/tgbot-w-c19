@@ -4,6 +4,8 @@ from aiohttp import ClientSession
 from fastapi import status
 from pydantic import Field
 from pydantic.main import BaseModel
+
+from config import settings
 from custom_logging import logger
 
 
@@ -86,7 +88,7 @@ class WeatherData(BaseModel):
 
 
 async def get_weather_data(session: ClientSession) -> Optional[str]:
-    url = "https://api.openweathermap.org/data/2.5/weather?id=625144&appid=d8401dcbd228a0cecc87e84e2f65af62&units" \
+    url = f"https://api.openweathermap.org/data/2.5/weather?id=625144&appid={settings.open_weather_appid}&units" \
           "=metric&lang=ru"
 
     response = await session.get(url)

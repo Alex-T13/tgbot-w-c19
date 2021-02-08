@@ -9,6 +9,8 @@ class Settings(BaseSettings):
     port: int = Field(env="PORT", default=8000)
     telegram_bot_token: str = Field(..., env="TELEGRAM_BOT_TOKEN")
     telegram_webhook_token: str = Field(..., env="TELEGRAM_WEBHOOK_TOKEN")
+    x_rapidapi_key: str = Field(..., env="X_RAPIDAPI_KEY")
+    open_weather_appid: str = Field(..., env="OPEN_WEATHER_APPID")
 
     class Config:
         case_sensitive = True
