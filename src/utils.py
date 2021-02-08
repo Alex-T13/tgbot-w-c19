@@ -15,6 +15,8 @@ def main_switch_update(session: ClientSession, update_mass):
         "voice": lambda: choice_of_answer(""),
     }
 
+    print(update_mass)
+
     for key in switch_dict:
         if key in update_mass:
             if update_mass.key is not None:
