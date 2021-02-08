@@ -8,11 +8,11 @@ from get_data.get_data_weather import get_weather_data
 
 def main_switch_update(session: ClientSession, update_mass):
     switch_dict = {
-        "update_mass.entities": lambda: select_event(session, update_mass.text),
-        "update_mass.text": lambda: choice_of_answer(update_mass.text),
-        "update_mass.animation": lambda: choice_of_answer(""),
-        "update_mass.sticker": lambda: choice_of_answer(""),
-        "update_mass.voice": lambda: choice_of_answer(""),
+        "entities": lambda: select_event(session, update_mass.text),
+        "text": lambda: choice_of_answer(update_mass.text),
+        "animation": lambda: choice_of_answer(""),
+        "sticker": lambda: choice_of_answer(""),
+        "voice": lambda: choice_of_answer(""),
     }
 
     for key in switch_dict:
@@ -22,6 +22,8 @@ def main_switch_update(session: ClientSession, update_mass):
             print(type(switch_dict[key]))
 
             return switch_dict[key]()
+        else:
+            return "Keys not found"
 
 
 def choice_of_answer(ar: Optional[str] = None):
