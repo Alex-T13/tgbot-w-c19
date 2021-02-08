@@ -105,7 +105,7 @@ async def handle_webhook(update: Update, client_session: ClientSession = Depends
         # answer = await select_event(client_session, update_massage.text)
 
     print(type(answer))
-    print(f"{answer} None")
+    print(f"{answer} (answer)")
 
     msg = await send_message(client_session, chat_id=update_massage.chat.id, text=answer,)
     logger.debug(msg.json(indent=2, sort_keys=True))

@@ -25,10 +25,12 @@ def main_switch_update(session: ClientSession, update_mass):
                 return switch_dict[key]()
             else:
                 print("key value is None")
-                return "key value is None"
+                # return "key value is None"
         else:
             print(key)
-            return "Keys not found"
+            # return "Keys not found"
+
+    return "Keys not found"
 
 
 def choice_of_answer(ar: Optional[str] = None):
