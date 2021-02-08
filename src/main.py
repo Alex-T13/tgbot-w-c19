@@ -93,7 +93,7 @@ async def handle_webhook(update: Update, client_session: ClientSession = Depends
     update_massage = update.message if update.message is not None else update.edited_message
 
     print(type(update_massage))
-    print(update_massage)
+    print(update_massage.text)
 
     answer = main_switch_update(client_session, update_massage)  # AWAIT
 
