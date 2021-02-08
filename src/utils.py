@@ -21,6 +21,7 @@ def main_switch_update(session: ClientSession, update_mass):
 
                 print(key)
                 print(type(key))
+                print(update_mass.key)
 
                 return switch_dict[key]()
             else:
