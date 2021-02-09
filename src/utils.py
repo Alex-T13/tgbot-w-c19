@@ -16,8 +16,8 @@ def main_switch_update(session: ClientSession, update_massage: Message):
     print(f"{update}  This is update")
 
     switch_dict = {
-        "entities": lambda: select_event(session, update_massage.text),
-        "text": lambda: choice_of_answer(update_massage.text),
+        "entities": lambda: select_event(session, update['text']),
+        "text": lambda: choice_of_answer(update['text']),
         "animation": lambda: choice_of_answer(""),
         "sticker": lambda: choice_of_answer(""),
         "voice": lambda: choice_of_answer(""),
@@ -29,7 +29,7 @@ def main_switch_update(session: ClientSession, update_massage: Message):
 
     for key in switch_dict:
         if key in update:
-            print(f"{update[key]}  This is update[key]")
+            print(f"{update[key]}  This is update[key] in if")
 
             if update[key]:
 
