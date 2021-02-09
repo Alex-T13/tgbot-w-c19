@@ -16,7 +16,7 @@ def main_switch_update(session: ClientSession, update_massage: Message):
     print(f"{update}  This is update")
 
     switch_dict = {
-        "entities": lambda: select_event(session, update['text']),
+        "entities": lambda: await select_event(session, update['text']),
         "text": lambda: choice_of_answer(update['text']),
         "animation": lambda: choice_of_answer(""),
         "sticker": lambda: choice_of_answer(""),
