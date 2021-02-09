@@ -95,7 +95,7 @@ async def handle_webhook(update: Update, client_session: ClientSession = Depends
     print(type(update_massage))
     print(update_massage.text)
 
-    answer = await main_switch_update(client_session, update_massage)  # AWAIT
+    answer = main_switch_update(client_session, update_massage)  # AWAIT
 
     # if not update_massage.entities:
         # print(f"{update_massage} entities is None")
