@@ -17,7 +17,7 @@ from dirs import DIR_TEMPLATES
 from telegram.methods import get_webhook_info
 from telegram.methods import send_message
 from telegram.methods import set_webhook
-from telegram.types import Update
+from telegram.types import Update, Message
 from urls import hide_webhook_token
 from urls import PATH_DOCS
 from urls import PATH_ROOT
@@ -91,8 +91,12 @@ async def handle_setup_webhook(
 
 @app.post(f"{PATH_WEBHOOK_SECRET}/")
 async def handle_webhook(update: Update, client_session: ClientSession = Depends(http_client_session),):
-
     update_massage = update.message if update.message is not None else update.edited_message
+
+    # update_massage = update.dict()
+
+    update_massage_entities = update.message.entities[-1].type if update_massage.entities is not None else ""
+    update_massage_entities
 
     print(type(update_massage))
     print(update_massage.text)

@@ -27,44 +27,36 @@ from telegram.types import Update, Message
 #     print([x for x in my_data if x])
 
 
-def main_switch_update(session: ClientSession, update_massage: Message):
-
-    print(f"{update_massage}  This is update_massage")
-
-    update = update_massage.dict()
-
+async def main_switch_update(session: ClientSession, update: Update):
     print(f"{update}  This is update")
 
+    update_massage = update.message if update.message is not None else update.edited_message
+    print(f"{update}  This is update_massage")
+    bot_command = True if update_massage.entities[-1].type == "bot_command" else False
+    # maybe through: list(filter(lambda
+
+    if bot_command:
+        await select_command_action(session, update_massage.text)
+
     switch_dict = {
-        "entities": lambda: select_event(session, update_massage.text),  # update['text']
-        "text": lambda: choice_of_answer(update_massage.text),
+        "text": lambda: choice_of_answer(update_massage.text),  # update['text']
         "animation": lambda: choice_of_answer(""),
         "sticker": lambda: choice_of_answer(""),
         "voice": lambda: choice_of_answer(""),
     }
     print(f"{update_massage.text}  This is update_massage.text")
-    print(f"{update['text']}  This is update['text']")
+    # print(f"{update['text']}  This is update['text']")
 
     # print(update_mass)
 
-    for key in switch_dict:
-        if update[key] is not None:
-            print(f"{update[key]}  This is update[key] in if")
-
-            # if update[key]:
-
-            print(key)
-            print(type(key))
-            print(update[key])
+    for key, value in update_massage.dict().items():
+        if value:
+            print(f"{value},  {key}     This is key, value in if")
 
             return switch_dict[key]()
-            # else:
-            #     print("key value is None")
-            #     # return "key value is None"
         else:
             print(key)
             print("key is None")
-            # return "Keys not found"
 
     return "Keys not found"
 
@@ -82,7 +74,7 @@ def choice_of_answer(ar: Optional[str] = None):
         return "Ok"
 
 
-def select_event(session: ClientSession, arg: str):
+def select_command_action(session: ClientSession, arg: str):
     switcher = {
         "/weather": lambda: get_weather_data(session),
         "/currency": lambda: get_currency(session),
@@ -93,7 +85,7 @@ def select_event(session: ClientSession, arg: str):
     }
 
     try:
-        return switcher[arg]()
+        return switcher[arg]()   ###########################################
     except ValueError:
 
         print("Не верный параметр bot-command")
