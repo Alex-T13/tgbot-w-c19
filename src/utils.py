@@ -31,7 +31,7 @@ async def main_switch_update(session: ClientSession, update: Update):
     print(f"{update}  This is update")
 
     update_massage = update.message if update.message is not None else update.edited_message
-    print(f"{update}  This is update_massage")
+    print(f"{update_massage}  This is update_massage")
     bot_command = True if update_massage.entities[-1].type == "bot_command" else False
     # maybe through: list(filter(lambda
 
