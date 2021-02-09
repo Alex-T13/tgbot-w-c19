@@ -8,9 +8,13 @@ from telegram.types import Update, Message
 
 
 def main_switch_update(session: ClientSession, update_massage: Message):
+
     print(f"{update_massage}  This is update_massage")
+
     update = update_massage.dict()
+
     print(f"{update}  This is update")
+
     switch_dict = {
         "entities": lambda: select_event(session, update_massage.text),
         "text": lambda: choice_of_answer(update_massage.text),
@@ -18,15 +22,16 @@ def main_switch_update(session: ClientSession, update_massage: Message):
         "sticker": lambda: choice_of_answer(""),
         "voice": lambda: choice_of_answer(""),
     }
-    print(f"{update_massage.text}  his is update_massage.text")
-    print(f"{update['text']}  his is update['text']")
+    print(f"{update_massage.text}  This is update_massage.text")
+    print(f"{update['text']}  This is update['text']")
 
     # print(update_mass)
 
     for key in switch_dict:
         if key in update:
+            print(f"{update[key]}  This is update[key]")
 
-            if update[key] is not None:
+            if update[key]:
 
                 print(key)
                 print(type(key))
