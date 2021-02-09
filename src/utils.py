@@ -16,7 +16,7 @@ def main_switch_update(session: ClientSession, update_massage: Message):
     print(f"{update}  This is update")
 
     switch_dict = {
-        "entities": lambda: select_event(session, update['text']),
+        "entities": lambda: await select_event(session, update['text']),
         "text": lambda: choice_of_answer(update['text']),
         "animation": lambda: choice_of_answer(""),
         "sticker": lambda: choice_of_answer(""),
@@ -61,7 +61,7 @@ def choice_of_answer(ar: Optional[str] = None):
         return "Ok"
 
 
-def select_event(session: ClientSession, arg: str):
+async def select_event(session: ClientSession, arg: str):
     switcher = {
         "/weather": lambda: get_weather_data(session),
         "/currency": lambda: get_currency(session),
