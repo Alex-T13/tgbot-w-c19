@@ -4,28 +4,29 @@ from aiohttp import ClientSession
 from get_data.get_currency import get_currency
 from get_data.get_data_c19 import get_cv19_data
 from get_data.get_data_weather import get_weather_data
-from telegram.types import Update
+from telegram.types import Update, Message
 
 
-def main_switch_update(session: ClientSession, update_mass: Update):
-    up_mas = update_mass.message
+def main_switch_update(session: ClientSession, update_mass: Message):
+    update = update_mass.dict()
     switch_dict = {
-        "entities": lambda: select_event(session, up_mas.text),
-        "text": lambda: choice_of_answer(up_mas.text),
+        "entities": lambda: select_event(session, update_mass.text),
+        "text": lambda: choice_of_answer(update_mass.text),
         "animation": lambda: choice_of_answer(""),
         "sticker": lambda: choice_of_answer(""),
         "voice": lambda: choice_of_answer(""),
     }
 
-    print(up_mas)
+    print(update_mass)
 
     for key in switch_dict:
-        if key in up_mas:
-            if up_mas.key is not None:
+        if key in update:
+
+            if update[key] is not None:
 
                 print(key)
                 print(type(key))
-                print(up_mas.key)
+                print(update[key])
 
                 return switch_dict[key]()
             else:
