@@ -27,7 +27,7 @@ from telegram.types import Update, Message
 #     print([x for x in my_data if x])
 
 
-async def main_switch_update(session: ClientSession, update_massage: Message):
+def main_switch_update(session: ClientSession, update_massage: Message):
 
     print(f"{update_massage}  This is update_massage")
 
@@ -57,7 +57,7 @@ async def main_switch_update(session: ClientSession, update_massage: Message):
             print(type(key))
             print(update[key])
 
-            return await switch_dict[key]()
+            return switch_dict[key]()
             # else:
             #     print("key value is None")
             #     # return "key value is None"
@@ -82,7 +82,7 @@ def choice_of_answer(ar: Optional[str] = None):
         return "Ok"
 
 
-async def select_event(session: ClientSession, arg: str):
+def select_event(session: ClientSession, arg: str):
     switcher = {
         "/weather": lambda: get_weather_data(session),
         "/currency": lambda: get_currency(session),
