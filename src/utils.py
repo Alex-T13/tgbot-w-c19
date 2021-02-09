@@ -7,17 +7,21 @@ from get_data.get_data_weather import get_weather_data
 from telegram.types import Update, Message
 
 
-def main_switch_update(session: ClientSession, update_mass: Message):
-    update = update_mass.dict()
+def main_switch_update(session: ClientSession, update_massage: Message):
+    print(f"{update_massage}  This is update_massage")
+    update = update_massage.dict()
+    print(f"{update}  This is update")
     switch_dict = {
-        "entities": lambda: select_event(session, update_mass.text),
-        "text": lambda: choice_of_answer(update_mass.text),
+        "entities": lambda: select_event(session, update_massage.text),
+        "text": lambda: choice_of_answer(update_massage.text),
         "animation": lambda: choice_of_answer(""),
         "sticker": lambda: choice_of_answer(""),
         "voice": lambda: choice_of_answer(""),
     }
+    print(f"{update_massage.text}  his is update_massage.text")
+    print(f"{update['text']}  his is update['text']")
 
-    print(update_mass)
+    # print(update_mass)
 
     for key in switch_dict:
         if key in update:
