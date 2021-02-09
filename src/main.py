@@ -97,9 +97,9 @@ async def handle_webhook(update: Update, client_session: ClientSession = Depends
     print(type(update_massage))
     print(update_massage.text)
 
-    answer = main_switch_update(client_session, update_massage)  # AWAIT
+    answer = await main_switch_update(client_session, update_massage)  # AWAIT
 
-    answer = json.dumps(answer, indent=2, sort_keys=True, ensure_ascii=True)
+    # answer = json.dumps(answer, indent=2, sort_keys=True, ensure_ascii=True)
 
     # if not update_massage.entities:
         # print(f"{update_massage} entities is None")
@@ -111,7 +111,7 @@ async def handle_webhook(update: Update, client_session: ClientSession = Depends
     # print(type(answer))
     # print(f"{answer} (answer)")
 
-    msg = await send_message(client_session, chat_id=update_massage.chat.id, text=answer,)
+    msg = await send_message(client_session, chat_id=update_massage.chat.id, text=answer)
     logger.debug(msg.json(indent=2, sort_keys=True))
 
 
