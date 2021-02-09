@@ -7,7 +7,7 @@ from get_data.get_data_weather import get_weather_data
 from telegram.types import Update, Message
 
 
-def main_switch_update(session: ClientSession, update_massage: Message):
+async def main_switch_update(session: ClientSession, update_massage: Message):
 
     print(f"{update_massage}  This is update_massage")
 
