@@ -7,6 +7,26 @@ from get_data.get_data_weather import get_weather_data
 from telegram.types import Update, Message
 
 
+# async def main_switch_update1(session: ClientSession, update_massage: Message):
+#     # update = update_massage
+#     update = update_massage.dict()
+#
+#     switch_dict = {
+#         "entities": lambda: await select_event(session, update_massage.text),
+#         "text": lambda: choice_of_answer(update_massage.text),  # update['text']
+#         "animation": lambda: choice_of_answer(""),
+#         "sticker": lambda: choice_of_answer(""),
+#         "voice": lambda: choice_of_answer(""),
+#     }
+#
+#     return switch_dict[key]()
+#
+#     for key in switch_dict:
+#         if update[key] is not None:
+#
+#     print([x for x in my_data if x])
+
+
 async def main_switch_update(session: ClientSession, update_massage: Message):
 
     print(f"{update_massage}  This is update_massage")
@@ -16,8 +36,8 @@ async def main_switch_update(session: ClientSession, update_massage: Message):
     print(f"{update}  This is update")
 
     switch_dict = {
-        "entities": lambda: await select_event(session, update['text']),
-        "text": lambda: choice_of_answer(update['text']),
+        "entities": lambda: select_event(session, update_massage.text),  # update['text']
+        "text": lambda: choice_of_answer(update_massage.text),
         "animation": lambda: choice_of_answer(""),
         "sticker": lambda: choice_of_answer(""),
         "voice": lambda: choice_of_answer(""),
@@ -28,21 +48,22 @@ async def main_switch_update(session: ClientSession, update_massage: Message):
     # print(update_mass)
 
     for key in switch_dict:
-        if key in update:
+        if update[key] is not None:
             print(f"{update[key]}  This is update[key] in if")
 
-            if update[key]:
+            # if update[key]:
 
-                print(key)
-                print(type(key))
-                print(update[key])
+            print(key)
+            print(type(key))
+            print(update[key])
 
-                return switch_dict[key]()
-            else:
-                print("key value is None")
-                # return "key value is None"
+            return switch_dict[key]()
+            # else:
+            #     print("key value is None")
+            #     # return "key value is None"
         else:
             print(key)
+            print("key is None")
             # return "Keys not found"
 
     return "Keys not found"
