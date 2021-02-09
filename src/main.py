@@ -99,7 +99,7 @@ async def handle_webhook(update: Update, client_session: ClientSession = Depends
     # print(type(update_massage))
     # print(update_massage.text)
 
-    answer = await main_switch_update(client_session, update)  # AWAIT
+    answer = await main_switch_update(client_session, update_massage)  # AWAIT
 
     # answer = json.dumps(answer, indent=2, sort_keys=True, ensure_ascii=True)
 
