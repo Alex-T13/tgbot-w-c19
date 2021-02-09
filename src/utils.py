@@ -57,7 +57,7 @@ async def main_switch_update(session: ClientSession, update_massage: Message):
             print(type(key))
             print(update[key])
 
-            return switch_dict[key]()
+            return await switch_dict[key]()
             # else:
             #     print("key value is None")
             #     # return "key value is None"
