@@ -1,3 +1,5 @@
+import json
+
 from aiohttp import ClientSession
 from fastapi import Depends
 from fastapi import FastAPI
@@ -96,6 +98,8 @@ async def handle_webhook(update: Update, client_session: ClientSession = Depends
     print(update_massage.text)
 
     answer = main_switch_update(client_session, update_massage)  # AWAIT
+
+    answer = json.dumps(answer, indent=2, sort_keys=True, ensure_ascii=True)
 
     # if not update_massage.entities:
         # print(f"{update_massage} entities is None")
