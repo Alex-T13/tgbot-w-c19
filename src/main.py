@@ -1,5 +1,3 @@
-import json
-
 from aiohttp import ClientSession
 from fastapi import Depends
 from fastapi import FastAPI
@@ -90,30 +88,9 @@ async def handle_setup_webhook(
 @app.post(f"{PATH_WEBHOOK_SECRET}/")
 async def handle_webhook(update: Update, client_session: ClientSession = Depends(http_client_session),):
     update_massage = update.message if update.message is not None else update.edited_message
-    #
-    # # update_massage = update.dict()
-    #
-    # update_massage_entities = update.message.entities[-1].type if update_massage.entities is not None else ""
-    # update_massage_entities
-    #
-    # print(type(update_massage))
-    # print(update_massage.text)
-
     answer = await main_switch_update(client_session, update_massage)  # AWAIT
 
-    # answer = json.dumps(answer, indent=2, sort_keys=True, ensure_ascii=True)
-
-    # if not update_massage.entities:
-        # print(f"{update_massage} entities is None")
-        # answer = choice_of_answer(update_massage.text)
-    # else:
-        # print(f"{update_massage} entities is try")
-        # answer = await select_event(client_session, update_massage.text)
-
-    # print(type(answer))
-    # print(f"{answer} (answer)")
-
-    msg = await send_message(client_session, chat_id=update_massage.chat.id, text=answer, )
+    msg = await send_message(client_session, chat_id=update_massage.chat.id, text=answer)
     logger.debug(msg.json(indent=2, sort_keys=True))
 
 

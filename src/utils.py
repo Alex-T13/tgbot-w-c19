@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Optional
 from aiohttp import ClientSession
 
 from get_data.get_currency import get_currency
@@ -8,13 +8,16 @@ from telegram.types import Update, Message
 
 
 async def main_switch_update(session: ClientSession, update_massage: Message):
-    print(f"{update_massage}  This is update_massage")
+    # print(f"{update_massage}  This is update_massage")
 
     if update_massage.entities:
+        # print(f"${update_massage.entities} - entities is True")
         bot_command = True if update_massage.entities[-1].type == "bot_command" else False  # maybe through: list(filter(lambda
-    # print(f"{update_massage}  This is update_massage")
+        # print(f"${update_massage.entities[0].type} - Bot_command is True")
         if bot_command:
-            await select_command_action(session, update_massage.text)
+            return await select_command_action(session, update_massage.text)
+
+    # print(f"${update_massage.entities} - entities is False")
 
     switch_dict = {
         "text": lambda: choice_of_answer(update_massage.text),  # update['text']
@@ -22,20 +25,16 @@ async def main_switch_update(session: ClientSession, update_massage: Message):
         "sticker": lambda: choice_of_answer(""),
         "voice": lambda: choice_of_answer(""),
     }
-    print(f"{update_massage.text}  This is update_massage.text")
-    # print(f"{update['text']}  This is update['text']")
-
-    # print(update_mass)
+    # print(f"{update_massage.text}  This is update_massage.text")
 
     for key, value in update_massage.dict().items():
-        if value:
-            print(f"{value},  {key}     This is key, value in if")
+        if key in switch_dict and value:
+            # print(f" ${key}  , ^{value}   This is key, value in if")
 
             return switch_dict[key]()
-        else:
-            print(key)
-            print("key is None")
-
+        # else:
+        #     print(f"${key}")
+        #     print("key is None")
     return "Keys not found"
 
 
@@ -62,10 +61,12 @@ def select_command_action(session: ClientSession, arg: str):
         "/covid19usa": lambda: get_cv19_data(session, "USA"),
     }
 
-    try:
-        return switcher[arg]()   ###########################################
-    except ValueError:
+    return switcher[arg]()
 
-        print("Не верный параметр bot-command")
-
-        return "Не верный параметр bot-command"
+    # try:
+    #     return switcher[arg]()   #######doesn't work###############
+    # except ValueError:
+    #
+    #     print("Не верный параметр bot-command")
+    #
+    #     return "Не верный параметр bot-command"
