@@ -30,13 +30,94 @@ class MessageEntity(BaseModel):
     user: Optional[User] = Field(default=None)
 
 
-class Message(BaseModel):
-    chat: Chat = Field(...)
-    date: int = Field(...)
-    entities: List[MessageEntity] = Field(default_factory=list)
-    from_: Optional[User] = Field(default=None)
+class Voice(BaseModel):
+    file_id: str = Field(...)
+    file_unique_id: str = Field(...)
+    duration: int = Field(...)
+    mime_type: Optional[str] = Field(default=None)
+    file_size: Optional[int] = Field(default=None)
+
+
+class PhotoSize(BaseModel):
+    file_id: str = Field(...)
+    file_unique_id: str = Field(...)
+    width: int = Field(...)
+    height: int = Field(...)
+    file_size: Optional[int] = Field(default=None)
+
+
+class MaskPosition(BaseModel):
+    point: str = Field(...)
+    x_shift: float = Field(...)
+    y_shift: float = Field(...)
+    scale: float = Field(...)
+
+
+class Sticker(BaseModel):
+    file_id: str = Field(...)
+    file_unique_id: str = Field(...)
+    width: int = Field(...)
+    height: int = Field(...)
+    is_animated: bool = Field(...)
+    thumb: Optional[PhotoSize] = Field(default=None)
+    emoji: Optional[str] = Field(default=None)
+    set_name: Optional[str] = Field(default=None)
+    mask_position: Optional[MaskPosition] = Field(default=None)
+    file_size: Optional[int] = Field(default=None)
+
+
+class Animation(BaseModel):
+    file_id: str = Field(...)
+    file_unique_id: str = Field(...)
+    width: int = Field(...)
+    height: int = Field(...)
+    duration: int = Field(...)
+    thumb: Optional[PhotoSize] = Field(default=None)
+    file_name: Optional[str] = Field(default=None)
+    mime_type: Optional[str] = Field(default=None)
+    file_size: Optional[int] = Field(default=None)
+
+
+class Document(BaseModel):
+    file_id: str = Field(...)
+    file_unique_id: str = Field(...)
+    thumb: Optional[PhotoSize] = Field(default=None)
+    file_name: Optional[str] = Field(default=None)
+    mime_type: Optional[str] = Field(default=None)
+    file_size: Optional[int] = Field(default=None)
+
+
+class ReplyToMessageId(BaseModel):
     message_id: int = Field(...)
+    from_: Optional[User] = Field(default=None)
+    date: int = Field(...)
+    chat: Chat = Field(...)
+    # reply_to_message: Optional[ReplyToMessageId] = Field(default=None)
     text: Optional[str] = Field(default=None)
+    entities: List[MessageEntity] = Field(default_factory=list)
+    animation: Optional[Animation] = Field(default=None)
+    document: Optional[Document] = Field(default=None)
+    sticker: Optional[Sticker] = Field(default=None)
+    voice: Optional[Voice] = Field(default=None)
+
+    class Config:
+        fields = {
+            "from_": "from",
+        }
+
+
+class Message(BaseModel):
+    message_id: int = Field(...)
+    from_: Optional[User] = Field(default=None)
+    date: int = Field(...)
+    chat: Chat = Field(...)
+    reply_to_message: Optional[ReplyToMessageId] = Field(default=None)
+    text: Optional[str] = Field(default=None)
+    entities: List[MessageEntity] = Field(default_factory=list)
+    animation: Optional[Animation] = Field(default=None)
+    document: Optional[Document] = Field(default=None)
+    sticker: Optional[Sticker] = Field(default=None)
+    voice: Optional[Voice] = Field(default=None)
 
     class Config:
         fields = {
@@ -47,11 +128,16 @@ class Message(BaseModel):
 class EditedMessage(BaseModel):
     message_id: int = Field(...)
     from_: Optional[User] = Field(default=None)
-    chat: Chat = Field(...)
     date: int = Field(...)
     edit_date: int = Field(...)
-    entities: List[MessageEntity] = Field(default_factory=list)
+    chat: Chat = Field(...)
+    reply_to_message: Optional[ReplyToMessageId] = Field(default=None)
     text: Optional[str] = Field(default=None)
+    entities: List[MessageEntity] = Field(default_factory=list)
+    animation: Optional[Animation] = Field(default=None)
+    document: Optional[Document] = Field(default=None)
+    sticker: Optional[Sticker] = Field(default=None)
+    voice: Optional[Voice] = Field(default=None)
 
     class Config:
         fields = {
