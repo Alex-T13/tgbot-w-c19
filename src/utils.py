@@ -12,7 +12,8 @@ async def main_switch_update(update_massage: Message, session: ClientSession):
     if update_massage.entities:
         bot_command = True if update_massage.entities[-1].type == "bot_command" else False  # maybe through: list(filter(lambda
         if bot_command:
-            if update_massage.text == "/start":
+            allowed_list = ("/weather", "/currency", "/covid19global", "/covid19blr", "/covid19rus", "/covid19usa")
+            if update_massage.text not in allowed_list:
                 return choice_of_answer("")
 
             return await select_command_action(session, update_massage.text)
@@ -57,8 +58,8 @@ def select_command_action(session: ClientSession, arg: str):
     }
 
     payload = switcher[arg]()
-
     return payload
+
 
     # try:
     #     return switcher[arg]()   #######doesn't work###############
