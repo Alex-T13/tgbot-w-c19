@@ -25,7 +25,7 @@ class Cv19Stat(BaseModel):
 
 
 async def get_cv19_data(
-        session: ClientSession, p_country: Optional[str] = None):  # -> Optional[Cv19Data]:   # Optional[str]:
+        session: ClientSession, p_country: Optional[str] = None):
     if not p_country:
         url = "https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total"
     else:

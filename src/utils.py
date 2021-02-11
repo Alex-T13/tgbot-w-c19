@@ -4,37 +4,31 @@ from aiohttp import ClientSession
 from get_data.get_currency import get_currency
 from get_data.get_data_c19 import get_cv19_data
 from get_data.get_data_weather import get_weather_data
-from telegram.types import Update, Message
+from telegram.types import Message
 
 
-async def main_switch_update(session: ClientSession, update_massage: Message):
-    # print(f"{update_massage}  This is update_massage")
+async def main_switch_update(update_massage: Message, session: ClientSession):
 
     if update_massage.entities:
-        # print(f"${update_massage.entities} - entities is True")
         bot_command = True if update_massage.entities[-1].type == "bot_command" else False  # maybe through: list(filter(lambda
-        # print(f"${update_massage.entities[0].type} - Bot_command is True")
         if bot_command:
+            if update_massage.text == "/start":
+                return choice_of_answer("")
+
             return await select_command_action(session, update_massage.text)
 
-    # print(f"${update_massage.entities} - entities is False")
-
     switch_dict = {
-        "text": lambda: choice_of_answer(update_massage.text),  # update['text']
+        "text": lambda: choice_of_answer(update_massage.text),
         "animation": lambda: choice_of_answer(""),
         "sticker": lambda: choice_of_answer(""),
         "voice": lambda: choice_of_answer(""),
     }
-    # print(f"{update_massage.text}  This is update_massage.text")
 
     for key, value in update_massage.dict().items():
         if key in switch_dict and value:
-            # print(f" ${key}  , ^{value}   This is key, value in if")
 
             return switch_dict[key]()
-        # else:
-        #     print(f"${key}")
-        #     print("key is None")
+
     return "Keys not found"
 
 
@@ -52,6 +46,7 @@ def choice_of_answer(ar: Optional[str] = None):
 
 
 def select_command_action(session: ClientSession, arg: str):
+
     switcher = {
         "/weather": lambda: get_weather_data(session),
         "/currency": lambda: get_currency(session),
@@ -61,7 +56,9 @@ def select_command_action(session: ClientSession, arg: str):
         "/covid19usa": lambda: get_cv19_data(session, "USA"),
     }
 
-    return switcher[arg]()
+    payload = switcher[arg]()
+
+    return payload
 
     # try:
     #     return switcher[arg]()   #######doesn't work###############

@@ -88,7 +88,8 @@ async def handle_setup_webhook(
 @app.post(f"{PATH_WEBHOOK_SECRET}/")
 async def handle_webhook(update: Update, client_session: ClientSession = Depends(http_client_session),):
     update_massage = update.message if update.message is not None else update.edited_message
-    answer = await main_switch_update(client_session, update_massage)  # AWAIT
+
+    answer = await main_switch_update(update_massage, client_session)  # AWAIT
 
     msg = await send_message(client_session, chat_id=update_massage.chat.id, text=answer)
     logger.debug(msg.json(indent=2, sort_keys=True))
