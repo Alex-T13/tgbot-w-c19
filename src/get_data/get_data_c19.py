@@ -37,7 +37,6 @@ async def get_cv19_data(
     response = await session.get(url, headers=headers)
 
     if response.status != status.HTTP_200_OK:
-        # print(response.status, response.text())
         logger.warning("telegram api call failed: %s", response)
         body = await response.text()
         logger.debug(body)
@@ -48,17 +47,11 @@ async def get_cv19_data(
 
     obj_format = Cv19Stat(**payload).data
 
-    # print(f"{type(obj_format)} из get_data_cv obj_format")
-    # print(f"{obj_format} из get_data_cv obj_format")
-
     obj_json_str = obj_format.json(exclude={'lastChecked', 'lastReported'})  # by_alias
 
     for r in (("confirmed", "Заболело"), ("recovered", "Выздоровело"),
               ("deaths", "Умерло"), ("location", "Локация"), ("Global", "Весь мир"),
               ("Belarus", "Беларусь"), ("Russia", "Россия"), ("US", "США")):
         obj_json_str = obj_json_str.replace(*r)
-
-    # print(f"{obj_json_str} из get_data_cv obj_format_json")
-    # print(f"{type(obj_json_str)} из get_data_cv obj_format_json")
 
     return obj_json_str

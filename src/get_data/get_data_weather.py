@@ -90,11 +90,9 @@ class WeatherData(BaseModel):
 async def get_weather_data(session: ClientSession) -> Optional[str]:
     url = f"https://api.openweathermap.org/data/2.5/weather?id=625144&appid={settings.open_weather_appid}&units" \
           "=metric&lang=ru"
-
     response = await session.get(url)
 
     if response.status != status.HTTP_200_OK:
-        # print(response.status, response.text())
         logger.warning("telegram api call failed: %s", response)
         body = await response.text()
         logger.debug(body)
@@ -102,11 +100,7 @@ async def get_weather_data(session: ClientSession) -> Optional[str]:
         return None
 
     payload = await response.json()
-
     obj_format = WeatherData(**payload)
-
-    # print(f"{type(obj_format)} из get_data obj_format")
-    # print(f"{obj_format} из get_data obj_format")
 
     obj_format_dict = {
         "Город": obj_format.name,
@@ -119,8 +113,5 @@ async def get_weather_data(session: ClientSession) -> Optional[str]:
     }
 
     obj_json_str = json.dumps(obj_format_dict, indent=2, ensure_ascii=False)
-
-    # print(f"{obj_json_str} из get_data_cv obj_format_json")
-    # print(f"{type(obj_json_str)} из get_data_cv obj_format_json")
 
     return obj_json_str
