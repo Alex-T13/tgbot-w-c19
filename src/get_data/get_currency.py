@@ -12,7 +12,7 @@ async def get_currency(session: ClientSession, ):
     response = await session.get(url)
 
     if response.status != status.HTTP_200_OK:
-        logger.warning("telegram api call failed: %s", response)
+        logger.warning("www.nbrb.by api call failed: %s", response)
         body = await response.text()
         logger.debug(body)
 

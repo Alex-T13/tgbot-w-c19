@@ -93,7 +93,7 @@ async def get_weather_data(session: ClientSession) -> Optional[str]:
     response = await session.get(url)
 
     if response.status != status.HTTP_200_OK:
-        logger.warning("telegram api call failed: %s", response)
+        logger.warning("openweathermap api call failed: %s", response)
         body = await response.text()
         logger.debug(body)
 

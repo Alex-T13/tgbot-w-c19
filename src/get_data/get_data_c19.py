@@ -37,7 +37,7 @@ async def get_cv19_data(
     response = await session.get(url, headers=headers)
 
     if response.status != status.HTTP_200_OK:
-        logger.warning("telegram api call failed: %s", response)
+        logger.warning("covid-19-coronavirus api call failed: %s", response)
         body = await response.text()
         logger.debug(body)
 
