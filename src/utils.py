@@ -30,7 +30,7 @@ async def main_switch_update(update_massage: Message, session: ClientSession):
 
             return switch_dict[key]()
 
-    return "Keys not found"
+    return "Не шли мне такое, я не знаю что с этим делать."
 
 
 def choice_of_answer(ar: Optional[str] = None):
