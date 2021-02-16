@@ -2,11 +2,8 @@ import os
 from contextlib import closing
 from functools import wraps
 from typing import Callable
-from typing import List
-from typing import Optional
 
 from delorean import now
-# from dynaconf import settings
 from sqlalchemy import Boolean
 from sqlalchemy import Column
 from sqlalchemy import create_engine
@@ -19,9 +16,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import sessionmaker
 
-from api.schemas import PostSchema
 from telegram.types import Message
-
 import config
 
 
@@ -61,15 +56,48 @@ class MessageModel(Model_db):
 
 
 @using_session_db
-def save_massage(session: Session_db, data: Message) -> Message:
+def create_user(session: Session_db, data: Message) -> UserModel:
+    user = UserModel(**data.from_.dict())
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+
+    return user
+
+
+def get_all_users(session: Session_db, skip: int = 0, limit: int = 100):
+    return session.query(UserModel).offset(skip).limit(limit).all()
+
+
+@using_session_db
+def save_message(session: Session_db, data: Message) -> MessageModel:
     message = MessageModel(
         id=data.message_id,
         author_id=data.from_.id,
         text=data.text,
     )
-    session.add(post)
+    session.add(message)
     session.commit()
+    session.refresh(message)
 
-    session.refresh(post)
+    return message
 
-    return post
+
+def get_all_messages(session: Session_db, skip: int = 0, limit: int = 100):
+    return session.query(MessageModel).offset(skip).limit(limit).all()
+
+
+# def get_user_by_email(db: Session, email: str):
+#     return db.query(models.User).filter(models.User.email == email).first()
+
+
+        # class Parent(Base):
+        #     __tablename__ = 'parent'
+        #     id = Column(Integer, primary_key=True)
+        #     children = relationship("Child")
+        #
+        # class Child(Base):
+        #     __tablename__ = 'child'
+        #     id = Column(Integer, primary_key=True)
+        #     parent_id = Column(Integer, ForeignKey('parent.id'))
+

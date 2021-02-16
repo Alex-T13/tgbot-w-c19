@@ -15,7 +15,7 @@ from dirs import DIR_TEMPLATES
 from telegram.methods import get_webhook_info
 from telegram.methods import send_message
 from telegram.methods import set_webhook
-from telegram.types import Update, Message
+from telegram.types import Update
 from urls import hide_webhook_token
 from urls import PATH_DOCS
 from urls import PATH_ROOT
