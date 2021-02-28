@@ -12,11 +12,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import sessionmaker
 
-import config
 
-
-database_url = os.getenv("DATABASE_URL", config.settings.database_url)
-print(database_url)
+database_url = os.getenv("DATABASE_URL", "postgresql://postgres:POSTGRES@localhost:5432/tgbot_base")
 engine = create_engine(database_url)
 
 Session_db = sessionmaker(bind=engine)
@@ -31,7 +28,7 @@ class UserModel(Base):
     is_bot = Column(Boolean, nullable=False, default=False)
     last_name = Column(String)
     username = Column(String)
-    messages = relationship("MessageModel", backref="users")
+    messages = relationship("MessageModel", back_populates="author")
 
 
 class MessageModel(Base):
@@ -41,4 +38,4 @@ class MessageModel(Base):
     author_id = Column(Integer, ForeignKey('users.id'))
     text = Column(Text)
     created_at = Column(DateTime, nullable=False, default=lambda: now().datetime)
-    user = relationship("UserModel", back_populates="messages")
+    author = relationship("UserModel", back_populates="messages")

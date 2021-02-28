@@ -57,6 +57,7 @@ async def index(
     }
 
     response = templates.TemplateResponse("index.html", {"request": request, **context})
+    print(settings.database_url)
 
     return response
 
@@ -90,7 +91,6 @@ async def handle_webhook(update: Update, client_session: ClientSession = Depends
     update_massage = update.message if update.message is not None else update.edited_message
 
     answer = await main_switch_update(update_massage, client_session)  # AWAIT
-    
 
     msg = await send_message(client_session, chat_id=update_massage.chat.id, text=answer)
     logger.debug(msg.json(indent=2, sort_keys=True))
