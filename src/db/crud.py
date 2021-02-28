@@ -32,8 +32,14 @@ def create_user(session: Session_db, data: Message) -> UserModel:
     return user
 
 
+@using_session_db
 def get_all_users(session: Session_db, skip: int = 0, limit: int = 100):
     return session.query(UserModel).offset(skip).limit(limit).all()
+
+
+@using_session_db
+def get_single_user(session: Session_db, user_id):
+    return session.query(UserModel).filter(UserModel.id == user_id).first()
 
 
 @using_session_db

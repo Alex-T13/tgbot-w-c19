@@ -11,6 +11,7 @@ from fastapi.templating import Jinja2Templates
 
 from config import settings
 from custom_logging import logger
+from db.crud import create_user, save_message, get_single_user
 from dirs import DIR_TEMPLATES
 from telegram.methods import get_webhook_info
 from telegram.methods import send_message
@@ -57,7 +58,6 @@ async def index(
     }
 
     response = templates.TemplateResponse("index.html", {"request": request, **context})
-    print(settings.database_url)
 
     return response
 
@@ -90,7 +90,17 @@ async def handle_setup_webhook(
 async def handle_webhook(update: Update, client_session: ClientSession = Depends(http_client_session),):
     update_massage = update.message if update.message is not None else update.edited_message
 
-    answer = await main_switch_update(update_massage, client_session)  # AWAIT
+    get_user = get_single_user(update_massage.from_.id)
+    if get_user:
+        message = save_message(update_massage)
+        logger.debug(f"created message: {message}")
+    else:
+        user = create_user(update_massage)
+        logger.debug(f"created user: {user}")
+        message = save_message(update_massage)
+        logger.debug(f"created message: {message}")
+
+    answer = await main_switch_update(update_massage, client_session)
 
     msg = await send_message(client_session, chat_id=update_massage.chat.id, text=answer)
     logger.debug(msg.json(indent=2, sort_keys=True))
