@@ -24,8 +24,7 @@ from urls import PATH_SETUP_WEBHOOK
 from urls import PATH_WEBHOOK_SECRET
 from urls import URL_WEBHOOK
 from urls import URL_WEBHOOK_SECRET
-from utils import main_switch_update
-
+from utils import main_switch_update, get_last_msg
 
 app = FastAPI(
     description="Telegram Bot",
@@ -80,10 +79,7 @@ async def handle_setup_webhook(
             detail="webhook was not set",
         )
 
-    return RedirectResponse(
-        f"{PATH_ROOT}/",
-        status_code=status.HTTP_303_SEE_OTHER,
-    )
+    return RedirectResponse(f"{PATH_ROOT}/", status_code=status.HTTP_303_SEE_OTHER, )
 
 
 @app.post(f"{PATH_WEBHOOK_SECRET}/")
@@ -92,18 +88,48 @@ async def handle_webhook(update: Update, client_session: ClientSession = Depends
 
     get_user = get_single_user(update_massage.from_.id)
     if get_user:
-        message = save_message(update_massage)
-        logger.debug(f"created message: {message}")
+        if await get_last_msg(update_massage):
+            msg_ = await send_message(
+                client_session,
+                chat_id=update_massage.chat.id,
+                text=f"С возвращением {update_massage.from_.first_name}!"
+            )
+            logger.debug(msg_.json(indent=2, sort_keys=True))
     else:
         user = create_user(update_massage)
         logger.debug(f"created user: {user}")
-        message = save_message(update_massage)
-        logger.debug(f"created message: {message}")
+
+    save_msg = save_message(update_massage)
+    logger.debug(f"save message: {save_msg}")
 
     answer = await main_switch_update(update_massage, client_session)
-
     msg = await send_message(client_session, chat_id=update_massage.chat.id, text=answer)
     logger.debug(msg.json(indent=2, sort_keys=True))
+
+
+# @app.post("/api_test/create_user/")
+# async def create_u(user: Message, ):
+#     user = create_user(user)
+#     logger.debug(f"created user: {user}")
+#     return user
+#
+#
+# @app.post("/api_test/save_message/")
+# async def save_mes(s_message: Message, ):
+#     message = save_message(s_message)
+#     logger.debug(f"created message: {message}")
+#     return message
+
+
+# @app.post("/api_test/get_last_message/")
+# def get_last_mes(s_message: Message, ):
+#     l_msg = get_last_message(s_message.from_.id)
+#     logger.debug(f"message: {l_msg}")
+#     since = datetime.now() - timedelta(hours=2)
+#     if l_msg.created_at < since:
+#         return f"True {l_msg.created_at}"
+#     else:
+#         return f"False {l_msg.created_at}"
 
 
 if __name__ == "__main__":

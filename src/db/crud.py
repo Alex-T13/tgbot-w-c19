@@ -1,4 +1,3 @@
-# from pydantic.decorator import wraps
 from functools import wraps
 from typing import Callable
 from contextlib import closing
@@ -7,11 +6,11 @@ from db.database import Session_db, UserModel, MessageModel
 from telegram.types import Message
 
 
-def using_session_db(func: Callable):
-    @wraps(func)
+def using_session_db(func_: Callable):
+    @wraps(func_)
     def _wrapped(*args, **kwargs):
         with closing(Session_db()) as session:
-            return func(session, *args, **kwargs)
+            return func_(session, *args, **kwargs)
 
     return _wrapped
 
@@ -33,13 +32,9 @@ def create_user(session: Session_db, data: Message) -> UserModel:
 
 
 @using_session_db
-def get_all_users(session: Session_db, skip: int = 0, limit: int = 100):
-    return session.query(UserModel).offset(skip).limit(limit).all()
-
-
-@using_session_db
-def get_single_user(session: Session_db, user_id):
-    return session.query(UserModel).filter(UserModel.id == user_id).first()
+def get_single_user(session: Session_db, user_id: int):
+    s_user = session.query(UserModel).filter(UserModel.id == user_id).first()
+    return s_user
 
 
 @using_session_db
@@ -57,5 +52,18 @@ def save_message(session: Session_db, data: Message) -> MessageModel:
 
 
 @using_session_db
-def get_all_messages(session: Session_db, skip: int = 0, limit: int = 100):
-    return session.query(MessageModel).offset(skip).limit(limit).all()
+def get_last_message(session: Session_db, user_id: int):
+    l_message = session.query(MessageModel).filter(
+        MessageModel.author_id == user_id).order_by(MessageModel.created_at.desc()).first()
+
+    return l_message
+
+
+# @using_session_db
+# def get_all_messages(session: Session_db, skip: int = 0, limit: int = 100):
+#     return session.query(MessageModel).offset(skip).limit(limit).all()
+#
+#
+# @using_session_db
+# def get_all_users(session: Session_db, skip: int = 0, limit: int = 100):
+#     return session.query(UserModel).offset(skip).limit(limit).all()

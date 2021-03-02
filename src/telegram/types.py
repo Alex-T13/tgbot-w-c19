@@ -1,5 +1,6 @@
-from typing import List
+from typing import List, Dict
 from typing import Optional
+from datetime import datetime
 
 from pydantic import Field
 from pydantic.main import BaseModel
@@ -19,6 +20,9 @@ class User(BaseModel):
     is_bot: bool = Field(...)
     last_name: Optional[str] = Field(default=None)
     username: Optional[str] = Field(default=None)
+
+    class Config:
+        orm_mode = True
 
 
 class MessageEntity(BaseModel):
@@ -103,11 +107,24 @@ class ReplyToMessageId(BaseModel):
         fields = {
             "from_": "from",
         }
-        orm_mode = True
 
 
 class Message(ReplyToMessageId):
     reply_to_message: Optional[ReplyToMessageId] = Field(default=None)
+
+    class Config:
+        orm_mode = True
+
+
+# class ExtractMessage(BaseModel):
+#     id: int = Field(...)
+#     author_id: int = Field(...)
+#     text: Optional[str] = Field(default=None)
+#     created_at: Optional[datetime] = Field(default=None)  # Column(DateTime, nullable=False, default=lambda: now().datetime)
+#     # author: Optional[List] = Field(default=None)
+#
+#     class Config:
+#         orm_mode = True
 
 
 class EditedMessage(Message):

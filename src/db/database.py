@@ -1,6 +1,5 @@
 import os
 
-from delorean import now
 from sqlalchemy import Boolean
 from sqlalchemy import Column
 from sqlalchemy import create_engine
@@ -8,6 +7,7 @@ from sqlalchemy import DateTime
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import Text, String
+from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import sessionmaker
@@ -37,5 +37,5 @@ class MessageModel(Base):
     id = Column(Integer, primary_key=True)
     author_id = Column(Integer, ForeignKey('users.id'))
     text = Column(Text)
-    created_at = Column(DateTime, nullable=False, default=lambda: now().datetime)
+    created_at = Column(DateTime(timezone=False), server_default=func.now())
     author = relationship("UserModel", back_populates="messages")
