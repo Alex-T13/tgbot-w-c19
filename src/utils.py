@@ -65,5 +65,5 @@ async def get_last_msg(msg: Message, ):
     l_msg = get_last_message(msg.from_.id)
     logger.debug(f"get_last_message: {l_msg}")
 
-    since = datetime.now() - timedelta(minutes=30)
+    since = datetime.now() - timedelta(seconds=10)
     return True if l_msg.created_at < since else False
