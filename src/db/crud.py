@@ -42,7 +42,6 @@ def get_single_user(session: Session_db, user_id: int):
 @using_session_db
 def save_message(session: Session_db, data: Message) -> MessageModel:
     message = MessageModel(
-        id=data.message_id,
         author_id=data.from_.id,
         text=data.text,
     )

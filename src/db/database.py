@@ -1,6 +1,6 @@
 import os
 
-from sqlalchemy import Boolean
+from sqlalchemy import Boolean, Sequence
 from sqlalchemy import Column
 from sqlalchemy import create_engine
 from sqlalchemy import DateTime
@@ -34,7 +34,7 @@ class UserModel(Base):
 class MessageModel(Base):
     __tablename__ = "messages"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)  # Sequence("messages_table_seq", start=1, increment=1, optional=True),
     author_id = Column(Integer, ForeignKey('users.id'))
     text = Column(Text)
     created_at = Column(DateTime(timezone=False), server_default=func.now())
