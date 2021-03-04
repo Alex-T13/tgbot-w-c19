@@ -9,7 +9,7 @@ from custom_logging import logger
 
 
 class Cv19Data(BaseModel):
-    recovered: int = Field(...)  # alias="Выздоровевших"
+    recovered: int = Field(...)
     deaths: int = Field(...)
     confirmed: int = Field(...)
     lastChecked: Optional[str] = Field(default=None)  # "2021-02-05T14:22:01+00:00",
@@ -47,7 +47,7 @@ async def get_cv19_data(
 
     obj_format = Cv19Stat(**payload).data
 
-    obj_json_str = obj_format.json(exclude={'lastChecked', 'lastReported'})  # by_alias
+    obj_json_str = obj_format.json(exclude={'lastChecked', 'lastReported'})
 
     for r in (("confirmed", "Заболело"), ("recovered", "Выздоровело"),
               ("deaths", "Умерло"), ("location", "Локация"), ("Global", "Весь мир"),

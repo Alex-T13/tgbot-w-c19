@@ -12,7 +12,7 @@ from telegram.types import Message
 
 async def main_switch_update(update_massage: Message, session: ClientSession):
     if update_massage.entities:
-        bot_command = True if update_massage.entities[-1].type == "bot_command" else False  # maybe through: list(filter(lambda
+        bot_command = True if update_massage.entities[-1].type == "bot_command" else False   # !!!!warning!!!
         if bot_command:
             allowed_list = ("/weather", "/currency", "/covid19global", "/covid19blr", "/covid19rus", "/covid19usa")
             if update_massage.text not in allowed_list:
@@ -65,5 +65,5 @@ async def get_last_msg(msg: Message, ):
     l_msg = get_last_message(msg.from_.id)
     logger.debug(f"get_last_message: {l_msg}")
 
-    since = datetime.now() - timedelta(seconds=10)
+    since = datetime.now() - timedelta(minutes=30)
     return True if l_msg.created_at < since else False

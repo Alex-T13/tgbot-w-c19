@@ -1,5 +1,6 @@
 import json
-from typing import Optional, List
+from typing import Optional
+from typing import List
 from aiohttp import ClientSession
 from fastapi import status
 from pydantic import Field

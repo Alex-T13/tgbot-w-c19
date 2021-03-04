@@ -1,6 +1,5 @@
-from typing import List, Dict
+from typing import List
 from typing import Optional
-from datetime import datetime
 
 from pydantic import Field
 from pydantic.main import BaseModel
@@ -114,17 +113,6 @@ class Message(ReplyToMessageId):
 
     class Config:
         orm_mode = True
-
-
-# class ExtractMessage(BaseModel):
-#     id: int = Field(...)
-#     author_id: int = Field(...)
-#     text: Optional[str] = Field(default=None)
-#     created_at: Optional[datetime] = Field(default=None)  # Column(DateTime, nullable=False, default=lambda: now().datetime)
-#     # author: Optional[List] = Field(default=None)
-#
-#     class Config:
-#         orm_mode = True
 
 
 class EditedMessage(Message):

@@ -11,7 +11,9 @@ from fastapi.templating import Jinja2Templates
 
 from config import settings
 from custom_logging import logger
-from db.crud import create_user, save_message, get_single_user
+from db.crud import create_user
+from db.crud import save_message
+from db.crud import get_single_user
 from dirs import DIR_TEMPLATES
 from telegram.methods import get_webhook_info
 from telegram.methods import send_message
@@ -105,31 +107,6 @@ async def handle_webhook(update: Update, client_session: ClientSession = Depends
     answer = await main_switch_update(update_massage, client_session)
     msg = await send_message(client_session, chat_id=update_massage.chat.id, text=answer)
     logger.debug(msg.json(indent=2, sort_keys=True))
-
-
-# @app.post("/api_test/create_user/")
-# async def create_u(user: Message, ):
-#     user = create_user(user)
-#     logger.debug(f"created user: {user}")
-#     return user
-#
-#
-# @app.post("/api_test/save_message/")
-# async def save_mes(s_message: Message, ):
-#     message = save_message(s_message)
-#     logger.debug(f"created message: {message}")
-#     return message
-
-
-# @app.post("/api_test/get_last_message/")
-# def get_last_mes(s_message: Message, ):
-#     l_msg = get_last_message(s_message.from_.id)
-#     logger.debug(f"message: {l_msg}")
-#     since = datetime.now() - timedelta(hours=2)
-#     if l_msg.created_at < since:
-#         return f"True {l_msg.created_at}"
-#     else:
-#         return f"False {l_msg.created_at}"
 
 
 if __name__ == "__main__":

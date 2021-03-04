@@ -2,7 +2,9 @@ from functools import wraps
 from typing import Callable
 from contextlib import closing
 
-from db.database import Session_db, UserModel, MessageModel
+from db.database import Session_db
+from db.database import UserModel
+from db.database import MessageModel
 from telegram.types import Message
 
 
@@ -57,13 +59,3 @@ def get_last_message(session: Session_db, user_id: int):
         MessageModel.author_id == user_id).order_by(MessageModel.created_at.desc()).first()
 
     return l_message
-
-
-# @using_session_db
-# def get_all_messages(session: Session_db, skip: int = 0, limit: int = 100):
-#     return session.query(MessageModel).offset(skip).limit(limit).all()
-#
-#
-# @using_session_db
-# def get_all_users(session: Session_db, skip: int = 0, limit: int = 100):
-#     return session.query(UserModel).offset(skip).limit(limit).all()
