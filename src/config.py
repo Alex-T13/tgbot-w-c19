@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     telegram_webhook_token: str = Field(..., env="TELEGRAM_WEBHOOK_TOKEN")
     x_rapidapi_key: str = Field(..., env="X_RAPIDAPI_KEY")
     open_weather_appid: str = Field(..., env="OPEN_WEATHER_APPID")
+    # database_url: str = Field(..., env="DATABASE_URL")
 
     class Config:
         case_sensitive = True

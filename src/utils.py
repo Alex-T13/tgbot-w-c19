@@ -1,6 +1,9 @@
+from datetime import datetime, timedelta
 from typing import Optional
 from aiohttp import ClientSession
 
+from custom_logging import logger
+from db.crud import get_last_message
 from get_data.get_currency import get_currency
 from get_data.get_data_c19 import get_cv19_data
 from get_data.get_data_weather import get_weather_data
@@ -8,7 +11,6 @@ from telegram.types import Message
 
 
 async def main_switch_update(update_massage: Message, session: ClientSession):
-
     if update_massage.entities:
         bot_command = True if update_massage.entities[-1].type == "bot_command" else False  # maybe through: list(filter(lambda
         if bot_command:
@@ -47,7 +49,6 @@ def choice_of_answer(ar: Optional[str] = None):
 
 
 def select_command_action(session: ClientSession, arg: str):
-
     switcher = {
         "/weather": lambda: get_weather_data(session),
         "/currency": lambda: get_currency(session),
@@ -56,15 +57,13 @@ def select_command_action(session: ClientSession, arg: str):
         "/covid19rus": lambda: get_cv19_data(session, "Russia"),
         "/covid19usa": lambda: get_cv19_data(session, "USA"),
     }
-
     payload = switcher[arg]()
     return payload
 
 
-    # try:
-    #     return switcher[arg]()   #######doesn't work###############
-    # except ValueError:
-    #
-    #     print("Не верный параметр bot-command")
-    #
-    #     return "Не верный параметр bot-command"
+async def get_last_msg(msg: Message, ):
+    l_msg = get_last_message(msg.from_.id)
+    logger.debug(f"get_last_message: {l_msg}")
+
+    since = datetime.now() - timedelta(minutes=30)
+    return True if l_msg.created_at < since else False

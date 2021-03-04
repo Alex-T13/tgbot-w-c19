@@ -1,5 +1,6 @@
-from typing import List
-from typing import Optional, Union
+from typing import List, Dict
+from typing import Optional
+from datetime import datetime
 
 from pydantic import Field
 from pydantic.main import BaseModel
@@ -19,6 +20,9 @@ class User(BaseModel):
     is_bot: bool = Field(...)
     last_name: Optional[str] = Field(default=None)
     username: Optional[str] = Field(default=None)
+
+    class Config:
+        orm_mode = True
 
 
 class MessageEntity(BaseModel):
@@ -92,7 +96,6 @@ class ReplyToMessageId(BaseModel):
     from_: Optional[User] = Field(default=None)
     date: int = Field(...)
     chat: Chat = Field(...)
-    # reply_to_message: Optional[ReplyToMessageId] = Field(default=None)
     text: Optional[str] = Field(default=None)
     entities: List[MessageEntity] = Field(default_factory=list)
     animation: Optional[Animation] = Field(default=None)
@@ -106,43 +109,26 @@ class ReplyToMessageId(BaseModel):
         }
 
 
-class Message(BaseModel):
-    message_id: int = Field(...)
-    from_: Optional[User] = Field(default=None)
-    date: int = Field(...)
-    chat: Chat = Field(...)
+class Message(ReplyToMessageId):
     reply_to_message: Optional[ReplyToMessageId] = Field(default=None)
-    text: Optional[str] = Field(default=None)
-    entities: List[MessageEntity] = Field(default_factory=list)
-    animation: Optional[Animation] = Field(default=None)
-    document: Optional[Document] = Field(default=None)
-    sticker: Optional[Sticker] = Field(default=None)
-    voice: Optional[Voice] = Field(default=None)
 
     class Config:
-        fields = {
-            "from_": "from",
-        }
+        orm_mode = True
 
 
-class EditedMessage(BaseModel):
-    message_id: int = Field(...)
-    from_: Optional[User] = Field(default=None)
-    date: int = Field(...)
+# class ExtractMessage(BaseModel):
+#     id: int = Field(...)
+#     author_id: int = Field(...)
+#     text: Optional[str] = Field(default=None)
+#     created_at: Optional[datetime] = Field(default=None)  # Column(DateTime, nullable=False, default=lambda: now().datetime)
+#     # author: Optional[List] = Field(default=None)
+#
+#     class Config:
+#         orm_mode = True
+
+
+class EditedMessage(Message):
     edit_date: int = Field(...)
-    chat: Chat = Field(...)
-    reply_to_message: Optional[ReplyToMessageId] = Field(default=None)
-    text: Optional[str] = Field(default=None)
-    entities: List[MessageEntity] = Field(default_factory=list)
-    animation: Optional[Animation] = Field(default=None)
-    document: Optional[Document] = Field(default=None)
-    sticker: Optional[Sticker] = Field(default=None)
-    voice: Optional[Voice] = Field(default=None)
-
-    class Config:
-        fields = {
-            "from_": "from",
-        }
 
 
 class Update(BaseModel):
