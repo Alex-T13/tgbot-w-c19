@@ -1,3 +1,4 @@
+import json
 from typing import Optional
 from aiohttp import ClientSession
 from fastapi import status
@@ -9,9 +10,9 @@ from custom_logging import logger
 
 
 class Cv19Data(BaseModel):
-    recovered: int = Field(...)
-    deaths: int = Field(...)
-    confirmed: int = Field(...)
+    recovered: Optional[int] = Field(default=None)
+    deaths: Optional[int] = Field(default=None)
+    confirmed: Optional[int] = Field(default=None)
     lastChecked: Optional[str] = Field(default=None)  # "2021-02-05T14:22:01+00:00",
     lastReported: Optional[str] = Field(default=None)  # "2021-02-05T05:22:38+00:00",
     location: str = Field(...)
@@ -40,18 +41,22 @@ async def get_cv19_data(
         logger.warning("covid-19-coronavirus api call failed: %s", response)
         body = await response.text()
         logger.debug(body)
-
         return None
 
     payload = await response.json()
+    logger.debug(payload)
 
     obj_format = Cv19Stat(**payload).data
 
-    obj_json_str = obj_format.json(exclude={'lastChecked', 'lastReported'})
+    obj_format_dict = {
+        "Заболело": obj_format.confirmed,
+        "Выздоровело": obj_format.recovered,
+        "Умерло": obj_format.deaths,
+        "Локация": obj_format.location,
+    }
+    obj_json = json.dumps(obj_format_dict, indent=2, ensure_ascii=False)
 
-    for r in (("confirmed", "Заболело"), ("recovered", "Выздоровело"),
-              ("deaths", "Умерло"), ("location", "Локация"), ("Global", "Весь мир"),
-              ("Belarus", "Беларусь"), ("Russia", "Россия"), ("US", "США")):
-        obj_json_str = obj_json_str.replace(*r)
+    for r in (("Global", "Весь мир"), ("Belarus", "Беларусь"), ("Russia", "Россия"), ("US", "США")):
+        obj_json = obj_json.replace(*r)
 
-    return obj_json_str
+    return obj_json
