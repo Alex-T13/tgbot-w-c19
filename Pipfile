@@ -15,7 +15,7 @@ jedi = "<0.18.0"
 [packages]
 aiohttp = { extras = ["speedups"], version = "==3.7.4" }
 fastapi = "0.63.0"
-jinja2 = "==2.11.2"
+jinja2 = "==2.11.3"
 pydantic = { extras = ["dotenv"], version = "==1.7.3" }
 python-multipart = "==0.0.5"
 uvicorn = { extras = ["standard"], version = "==0.13.3" }
