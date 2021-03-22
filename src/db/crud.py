@@ -1,5 +1,5 @@
 from functools import wraps
-from typing import Callable
+from typing import Callable, List
 from contextlib import closing
 
 from db.database import Session_db
@@ -34,9 +34,20 @@ def create_user(session: Session_db, data: Message) -> UserModel:
 
 
 @using_session_db
-def get_single_user(session: Session_db, user_id: int):
+def get_single_user(session: Session_db, user_id: int) -> UserModel:
     s_user = session.query(UserModel).filter(UserModel.id == user_id).first()
     return s_user
+
+
+@using_session_db
+def get_all_users(session: Session_db, ) -> List[UserModel]:
+    users = session.query(UserModel).all()
+    return users
+
+
+# @using_session_db
+# def get_all_users(session: Session_db, skip: int = 0, limit: int = 100):
+#     return session.query(UserModel).offset(skip).limit(limit).all()
 
 
 @using_session_db
@@ -53,7 +64,7 @@ def save_message(session: Session_db, data: Message) -> MessageModel:
 
 
 @using_session_db
-def get_last_message(session: Session_db, user_id: int):
+def get_last_message(session: Session_db, user_id: int) -> MessageModel:
     l_message = session.query(MessageModel).filter(
         MessageModel.author_id == user_id).order_by(MessageModel.created_at.desc()).first()
 

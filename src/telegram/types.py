@@ -1,8 +1,13 @@
-from typing import List
+from typing import List, Text, Union, Dict
 from typing import Optional
 
 from pydantic import Field
 from pydantic.main import BaseModel
+
+
+class JsonApiSchema(BaseModel):
+    errors: Optional[List[Text]] = None
+    data: Union[List, Optional[Dict]] = None
 
 
 class Chat(BaseModel):
@@ -22,6 +27,13 @@ class User(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+UserList = List[User]
+
+
+class UserListApiSchema(JsonApiSchema):
+    data: UserList
 
 
 class MessageEntity(BaseModel):
