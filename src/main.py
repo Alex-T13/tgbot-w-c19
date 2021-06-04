@@ -12,12 +12,14 @@ from fastapi.templating import Jinja2Templates
 from config import settings
 from custom_logging import logger
 from db import crud
+from db.crud import create_user
 from dirs import DIR_TEMPLATES
 from telegram.methods import get_webhook_info
 from telegram.methods import send_message
 from telegram.methods import set_webhook
 from telegram.types import Update
 from telegram.types import User
+from telegram.types import Message
 # from telegram.types import UserListApiSchema
 from urls import hide_webhook_token
 from urls import PATH_DOCS
@@ -166,11 +168,11 @@ async def get_users(request: Request, password: str = Form(...), ):
 #     return response
 #
 #
-# @app.post("/api_test/create_user/")
-# async def create_u(user: Message, ):
-#     user = create_user(user)
-#     logger.debug(f"created user: {user}")
-#     return user
+@app.post("/api_test/create_user/")
+async def create_u(user: Message, ):
+    user = create_user(user)
+    logger.debug(f"created user: {user}")
+    return user
 
 
 if __name__ == "__main__":

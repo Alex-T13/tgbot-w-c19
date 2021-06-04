@@ -25,17 +25,18 @@ class UserModel(Base):
 
     id = Column(Integer, primary_key=True)
     first_name = Column(String)
-    is_bot = Column(Boolean, nullable=False, default=False)
+    is_bot = Column(Boolean, nullable=False, server_default='false')
     last_name = Column(String)
     username = Column(String)
-    messages = relationship("MessageModel", back_populates="author")
+    lang = Column(String, nullable=False, server_default="ru")
+    messages = relationship("MessageModel", back_populates="author", cascade="all, delete", passive_deletes=True)
 
 
 class MessageModel(Base):
     __tablename__ = "messages"
 
     id = Column(Integer, primary_key=True)  # Sequence("messages_table_seq", start=1, increment=1, optional=True),
-    author_id = Column(Integer, ForeignKey('users.id'))
+    author_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
     text = Column(Text)
     created_at = Column(DateTime(timezone=False), server_default=func.now())
     author = relationship("UserModel", back_populates="messages")

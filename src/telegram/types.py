@@ -24,6 +24,7 @@ class User(BaseModel):
     is_bot: bool = Field(...)
     last_name: Optional[str] = Field(default=None)
     username: Optional[str] = Field(default=None)
+    # lang: Optional[str] = Field(default=None)
 
     class Config:
         orm_mode = True
