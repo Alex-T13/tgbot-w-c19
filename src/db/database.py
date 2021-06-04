@@ -1,6 +1,6 @@
 import os
 
-from sqlalchemy import Boolean, Sequence
+from sqlalchemy import Boolean  # Sequence
 from sqlalchemy import Column
 from sqlalchemy import create_engine
 from sqlalchemy import DateTime

@@ -4,6 +4,7 @@ from aiohttp import ClientSession
 
 from custom_logging import logger
 from db.crud import get_last_message
+from get_data.get_btc import get_btc
 from get_data.get_currency import get_currency
 from get_data.get_data_c19 import get_cv19_data
 from get_data.get_data_weather import get_weather_data
@@ -14,7 +15,7 @@ async def main_switch_update(update_massage: Message, session: ClientSession):
     if update_massage.entities:
         bot_command = True if update_massage.entities[-1].type == "bot_command" else False   # !!!!warning!!!
         if bot_command:
-            allowed_list = ("/weather", "/currency", "/covid19global", "/covid19blr", "/covid19rus", "/covid19usa")
+            allowed_list = ("/weather", "/currency", "/btc", "/covid19global", "/covid19blr", "/covid19rus", "/covid19usa")
             if update_massage.text not in allowed_list:
                 return choice_of_answer("")
 
@@ -52,6 +53,7 @@ def select_command_action(session: ClientSession, arg: str):
     switcher = {
         "/weather": lambda: get_weather_data(session),
         "/currency": lambda: get_currency(session),
+        "/btc": lambda: get_btc(session),
         "/covid19global": lambda: get_cv19_data(session),
         "/covid19blr": lambda: get_cv19_data(session, "Belarus"),
         "/covid19rus": lambda: get_cv19_data(session, "Russia"),
@@ -64,6 +66,5 @@ def select_command_action(session: ClientSession, arg: str):
 async def get_last_msg(msg: Message, ):
     l_msg = get_last_message(msg.from_.id)
     logger.debug(f"get_last_message: {l_msg}")
-
     since = datetime.now() - timedelta(minutes=30)
     return True if l_msg.created_at < since else False
