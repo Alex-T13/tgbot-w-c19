@@ -12,7 +12,7 @@ from fastapi.templating import Jinja2Templates
 from config import settings
 from custom_logging import logger
 from db import crud
-from db.crud import create_user
+# from db.crud import create_user
 from dirs import DIR_TEMPLATES
 from telegram.methods import get_webhook_info
 from telegram.methods import send_message
@@ -29,7 +29,7 @@ from urls import PATH_WEBHOOK_SECRET
 from urls import URL_WEBHOOK
 from urls import URL_WEBHOOK_SECRET
 from utils import main_switch_update
-from utils import get_last_msg
+from utils import welcome_back
 
 app = FastAPI(
     description="Telegram Bot",
@@ -92,24 +92,14 @@ async def handle_setup_webhook(
 async def handle_webhook(update: Update, client_session: ClientSession = Depends(http_client_session),):
     update_massage = update.message if update.message is not None else update.edited_message
 
-    get_user = crud.get_single_user(update_massage.from_.id)
-    logger.debug(f"get single user: {get_user}")
-    if get_user:
-        if await get_last_msg(update_massage):
-            msg_ = await send_message(
-                client_session,
-                chat_id=update_massage.chat.id,
-                text=f"С возвращением {update_massage.from_.first_name}!"
-            )
-            logger.debug(msg_.json(indent=2, sort_keys=True))
-    else:
+    if not crud.get_user_by_id(update_massage.from_.id):
         user = crud.create_user(update_massage)
         logger.debug(f"created user: {user}")
 
-    save_msg = crud.save_message(update_massage)
-    logger.debug(f"save message: {save_msg}")
+    await welcome_back(client_session, update_massage)
+    crud.save_message(update_massage)
 
-    answer = await main_switch_update(update_massage, client_session)
+    answer = await main_switch_update(client_session, update_massage)
     msg = await send_message(client_session, chat_id=update_massage.chat.id, text=answer)
     logger.debug(msg.json(indent=2, sort_keys=True))
 
@@ -122,7 +112,7 @@ async def get_users(request: Request, password: str = Form(...), ):
             detail="Invalid password",
         )
 
-    objects = crud.get_all_users()
+    objects = crud.get_all_users()   # !!!!!!!!!objects -> users
     logger.debug(f"get users: {objects}")
     users = [
         User(
@@ -132,7 +122,7 @@ async def get_users(request: Request, password: str = Form(...), ):
             last_name=user.last_name,
             username=user.username,
         )
-        for user in objects
+        for user in objects    #посмотреть в доках, что делает эта херня
     ]
 
     logger.debug("built users")
@@ -170,7 +160,7 @@ async def get_users(request: Request, password: str = Form(...), ):
 #
 @app.post("/api_test/create_user/")
 async def create_u(user: Message, ):
-    user = create_user(user)
+    user = crud.create_user(user)
     logger.debug(f"created user: {user}")
     return user
 

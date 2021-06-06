@@ -8,10 +8,11 @@ from get_data.get_btc import get_btc
 from get_data.get_currency import get_currency
 from get_data.get_data_c19 import get_cv19_data
 from get_data.get_data_weather import get_weather_data
+from telegram.methods import send_message
 from telegram.types import Message
 
 
-async def main_switch_update(update_massage: Message, session: ClientSession):
+async def main_switch_update(session: ClientSession, update_massage: Message, ):
     if update_massage.entities:
         bot_command = True if update_massage.entities[-1].type == "bot_command" else False   # !!!!warning!!!
         if bot_command:
@@ -51,7 +52,7 @@ def choice_of_answer(ar: Optional[str] = None):
 
 def select_command_action(session: ClientSession, arg: str):
     switcher = {
-        "/weather": lambda: get_weather_data(session),
+        "/weather": lambda: get_weather_data(session),  # !асинхронный запуск должен быть
         "/currency": lambda: get_currency(session),
         "/btc": lambda: get_btc(session),
         "/covid19global": lambda: get_cv19_data(session),
@@ -63,8 +64,15 @@ def select_command_action(session: ClientSession, arg: str):
     return payload
 
 
-async def get_last_msg(msg: Message, ):
-    l_msg = get_last_message(msg.from_.id)
-    logger.debug(f"get_last_message: {l_msg}")
-    since = datetime.now() - timedelta(minutes=30)
-    return True if l_msg.created_at < since else False
+async def welcome_back(session: ClientSession, message: Message, ):
+    last_message = get_last_message(message.from_.id)
+    logger.debug(f"last message: {last_message}")
+    # logger.debug(last_message.json(indent=2, sort_keys=True))
+    since = datetime.now() - timedelta(minutes=1)  # 30/ 12hours
+
+    if last_message.created_at < since:
+        await send_message(session, chat_id=message.chat.id, text=f"С возвращением {message.from_.first_name}!")
+        logger.debug(f"the message 'welcome back' was sent to the user: {message.from_.first_name}, "
+                     f"id: {message.from_.id}")
+
+    return None

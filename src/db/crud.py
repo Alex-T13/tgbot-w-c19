@@ -2,6 +2,7 @@ from functools import wraps
 from typing import Callable, List
 from contextlib import closing
 
+from custom_logging import logger
 from db.database import Session_db
 from db.database import UserModel
 from db.database import MessageModel
@@ -25,6 +26,7 @@ def create_user(session: Session_db, data: Message) -> UserModel:
         is_bot=data.from_.is_bot,
         last_name=data.from_.last_name,
         username=data.from_.username,
+        lang="en",
     )
     session.add(user)
     session.commit()
@@ -34,9 +36,10 @@ def create_user(session: Session_db, data: Message) -> UserModel:
 
 
 @using_session_db
-def get_single_user(session: Session_db, user_id: int) -> UserModel:
-    s_user = session.query(UserModel).filter(UserModel.id == user_id).first()
-    return s_user
+def get_user_by_id(session: Session_db, user_id: int) -> UserModel:
+    user = session.query(UserModel).get(user_id)   # filter(UserModel.id == user_id).first()
+    logger.debug(f"get single user: {user}")
+    return user
 
 
 @using_session_db
@@ -60,6 +63,7 @@ def save_message(session: Session_db, data: Message) -> MessageModel:
     session.add(message)
     session.commit()
     session.refresh(message)
+    logger.debug(f"save message: {message}")
 
     return message
 

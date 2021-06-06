@@ -19,7 +19,7 @@ async def get_btc(session: ClientSession, ):
         return None
 
     btc = await response.json()
-    logger.debug(f"get_usd_in_response: {btc}")
+    logger.debug(f"get btc in response: {btc}")
 
     btc_str = f"Курс биткойна к USD: {btc['usd']}"
 
