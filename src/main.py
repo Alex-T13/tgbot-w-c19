@@ -1,35 +1,19 @@
 from aiohttp import ClientSession
-from fastapi import Depends
-from fastapi import FastAPI
-from fastapi import Form
-from fastapi import HTTPException
-from fastapi import Request
-from fastapi import status
-from fastapi.responses import HTMLResponse
-from fastapi.responses import RedirectResponse
+from fastapi import Depends, FastAPI, Form, HTTPException, Request, status
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from config import settings
 from custom_logging import logger
 from db import crud
-# from db.crud import create_user
 from dirs import DIR_TEMPLATES
-from telegram.methods import get_webhook_info
-from telegram.methods import send_message
-from telegram.methods import set_webhook
-from telegram.types import Update
-from telegram.types import User
-from telegram.types import Message
+from telegram.methods import get_webhook_info, send_message, set_webhook
+from telegram.types import Update, User, Message
 # from telegram.types import UserListApiSchema
-from urls import hide_webhook_token
-from urls import PATH_DOCS
-from urls import PATH_ROOT
-from urls import PATH_SETUP_WEBHOOK
-from urls import PATH_WEBHOOK_SECRET
-from urls import URL_WEBHOOK
-from urls import URL_WEBHOOK_SECRET
-from utils import main_switch_update
-from utils import welcome_back
+from urls import hide_webhook_token, PATH_DOCS, PATH_ROOT, PATH_SETUP_WEBHOOK
+from urls import PATH_WEBHOOK_SECRET, URL_WEBHOOK, URL_WEBHOOK_SECRET
+from utils import choice_of_answer, welcome_back
+
 
 app = FastAPI(
     description="Telegram Bot",
@@ -99,7 +83,8 @@ async def handle_webhook(update: Update, client_session: ClientSession = Depends
     await welcome_back(client_session, update_massage)
     crud.save_message(update_massage)
 
-    answer = await main_switch_update(client_session, update_massage)
+    answer = await choice_of_answer(client_session, update_massage)
+
     msg = await send_message(client_session, chat_id=update_massage.chat.id, text=answer)
     logger.debug(msg.json(indent=2, sort_keys=True))
 

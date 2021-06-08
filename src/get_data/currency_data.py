@@ -5,7 +5,7 @@ from fastapi import status
 from custom_logging import logger
 
 
-async def get_currency(session: ClientSession, ):
+async def get_data_currency(session: ClientSession, ):
 
     url = f"https://www.nbrb.by/api/exrates/rates?periodicity=0"
 

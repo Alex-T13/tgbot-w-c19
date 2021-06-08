@@ -5,7 +5,7 @@ from fastapi import status
 from custom_logging import logger
 
 
-async def get_btc(session: ClientSession, ):
+async def get_data_btc(session: ClientSession, ):
 
     url = "https://apirone.com/api/v2/ticker?currency=btc"
 

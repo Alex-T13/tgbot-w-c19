@@ -56,7 +56,7 @@ def get_all_users(session: Session_db, ) -> List[UserModel]:
 @using_session_db
 def save_message(session: Session_db, data: Message) -> MessageModel:
     message = MessageModel(
-        id=data.message_id,
+        # id=data.message_id,
         author_id=data.from_.id,
         text=data.text,
     )

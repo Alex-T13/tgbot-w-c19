@@ -1,6 +1,5 @@
 import json
-from typing import Optional
-from typing import List
+from typing import Optional, List
 from aiohttp import ClientSession
 from fastapi import status
 from pydantic import Field
@@ -88,7 +87,7 @@ class WeatherData(BaseModel):
     cod: int = Field(...)
 
 
-async def get_weather_data(session: ClientSession) -> Optional[str]:
+async def get_data_weather(session: ClientSession) -> Optional[str]:
     url = f"https://api.openweathermap.org/data/2.5/weather?id=625144&appid={settings.open_weather_appid}&units" \
           "=metric&lang=ru"
     response = await session.get(url)
