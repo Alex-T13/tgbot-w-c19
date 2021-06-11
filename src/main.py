@@ -1,3 +1,5 @@
+import json
+
 from aiohttp import ClientSession
 from fastapi import Depends, FastAPI, Form, HTTPException, Request, status
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -13,7 +15,6 @@ from telegram.types import Update, User, Message
 from urls import hide_webhook_token, PATH_DOCS, PATH_ROOT, PATH_SETUP_WEBHOOK
 from urls import PATH_WEBHOOK_SECRET, URL_WEBHOOK, URL_WEBHOOK_SECRET
 from utils import choice_of_answer, welcome_back
-
 
 app = FastAPI(
     description="Telegram Bot",
@@ -34,8 +35,8 @@ async def http_client_session():
 
 @app.get(f"{PATH_ROOT}/", response_class=HTMLResponse)
 async def index(
-    request: Request,
-    client_session: ClientSession = Depends(http_client_session),
+        request: Request,
+        client_session: ClientSession = Depends(http_client_session),
 ):
     logger.debug("handling index")
     webhook = await get_webhook_info(client_session)
@@ -53,8 +54,8 @@ async def index(
 
 @app.post(f"{PATH_SETUP_WEBHOOK}/")
 async def handle_setup_webhook(
-    password: str = Form(...),
-    client_session: ClientSession = Depends(http_client_session),
+        password: str = Form(...),
+        client_session: ClientSession = Depends(http_client_session),
 ):
     if password != settings.admin_password:
         raise HTTPException(
@@ -62,7 +63,7 @@ async def handle_setup_webhook(
             detail="Only admin is allowed to configure webhook",
         )
 
-    webhook_set = await set_webhook(client_session, webhook_url=f"{URL_WEBHOOK_SECRET}/",)
+    webhook_set = await set_webhook(client_session, webhook_url=f"{URL_WEBHOOK_SECRET}/", )
     if not webhook_set:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -73,18 +74,22 @@ async def handle_setup_webhook(
 
 
 @app.post(f"{PATH_WEBHOOK_SECRET}/")
-async def handle_webhook(update: Update, client_session: ClientSession = Depends(http_client_session),):
+async def handle_webhook(update: Update, client_session: ClientSession = Depends(http_client_session), ):
     update_massage = update.message if update.message is not None else update.edited_message
 
     if not crud.get_user_by_id(update_massage.from_.id):
         user = crud.create_user(update_massage)
         logger.debug(f"created user: {user}")
 
-    await welcome_back(client_session, update_massage)
+    loc = 'ru'
+
+    msg_welcome_back = await welcome_back(update_massage, loc=loc)
+    if msg_welcome_back:
+        await send_message(client_session, chat_id=update_massage.chat.id, text=msg_welcome_back)
+
     crud.save_message(update_massage)
 
-    answer = await choice_of_answer(client_session, update_massage)
-
+    answer = await choice_of_answer(client_session, update_massage, loc=loc)
     msg = await send_message(client_session, chat_id=update_massage.chat.id, text=answer)
     logger.debug(msg.json(indent=2, sort_keys=True))
 
@@ -97,7 +102,7 @@ async def get_users(request: Request, password: str = Form(...), ):
             detail="Invalid password",
         )
 
-    objects = crud.get_all_users()   # !!!!!!!!!objects -> users
+    objects = crud.get_all_users()  # !!!!!!!!!objects -> users
     logger.debug(f"get users: {objects}")
     users = [
         User(
@@ -107,7 +112,7 @@ async def get_users(request: Request, password: str = Form(...), ):
             last_name=user.last_name,
             username=user.username,
         )
-        for user in objects    #посмотреть в доках, что делает эта херня
+        for user in objects  # look in the docs what this shit does
     ]
 
     logger.debug("built users")

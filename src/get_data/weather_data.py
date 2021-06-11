@@ -1,4 +1,5 @@
 import json
+import inspect
 from typing import Optional, List
 from aiohttp import ClientSession
 from fastapi import status
@@ -7,6 +8,7 @@ from pydantic.main import BaseModel
 
 from config import settings
 from custom_logging import logger
+from localization.translator import translator, Translator
 
 
 class CoordW(BaseModel):
@@ -87,9 +89,10 @@ class WeatherData(BaseModel):
     cod: int = Field(...)
 
 
-async def get_data_weather(session: ClientSession) -> Optional[str]:
+async def weather_data(session: ClientSession, loc: str) -> Optional[str]:
+    # name = get_data_weather.__name__
     url = f"https://api.openweathermap.org/data/2.5/weather?id=625144&appid={settings.open_weather_appid}&units" \
-          "=metric&lang=ru"
+          f"=metric&lang={loc}"
     response = await session.get(url)
 
     if response.status != status.HTTP_200_OK:
@@ -99,19 +102,18 @@ async def get_data_weather(session: ClientSession) -> Optional[str]:
 
         return None
 
-    payload = await response.json()
-    obj_format = WeatherData(**payload)
+    resp_json = await response.json()
+    resp_obj_format = WeatherData(**resp_json)
 
-    obj_format_dict = {
-        "Город": obj_format.name,
-        "Погодные условия": obj_format.weather[-1].description,
-        "Температура(C)": obj_format.main.temp,
-        "Ощущается(C)": obj_format.main.feels_like,
-        "Влажность(%)": obj_format.main.humidity,
-        "Скорость ветра(м/с)": obj_format.wind.speed,
-        "Облачность(%)": obj_format.clouds.all
+    new_dict_resp = {
+        'city': resp_obj_format.name,
+        'weather': resp_obj_format.weather[-1].description,
+        'temperature(С)': resp_obj_format.main.temp,
+        'feels like(C)': resp_obj_format.main.feels_like,
+        'humidity(%)': resp_obj_format.main.humidity,
+        'wind speed(m/s)': resp_obj_format.wind.speed,
+        'cloudiness(%)': resp_obj_format.clouds.all
     }
 
-    obj_json_str = json.dumps(obj_format_dict, indent=2, ensure_ascii=False)
-
-    return obj_json_str
+    return Translator.trl_weather_data(loc=loc, data=new_dict_resp, )
+    # return translator(loc=loc, data=new_dict_resp, )

@@ -63,7 +63,7 @@ def save_message(session: Session_db, data: Message) -> MessageModel:
     session.add(message)
     session.commit()
     session.refresh(message)
-    logger.debug(f"save message: {message}")
+    # logger.debug(f"save message: {message}")
 
     return message
 
