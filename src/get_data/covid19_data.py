@@ -1,66 +1,14 @@
-from typing import Optional, List
+from typing import Optional
 from fastapi import status
-from pydantic import Field
-from pydantic.main import BaseModel
 
 from config import settings
 from custom_logging import logger
-
-
-# class Cv19Data(BaseModel):
-#     recovered: Optional[int] = Field(default=None)
-#     deaths: Optional[int] = Field(default=None)
-#     confirmed: Optional[int] = Field(default=None)
-#     lastChecked: Optional[str] = Field(default=None)  # "2021-02-05T14:22:01+00:00",
-#     lastReported: Optional[str] = Field(default=None)  # "2021-02-05T05:22:38+00:00",
-#     location: str = Field(...)
-#
-#
-# class Cv19Stat(BaseModel):
-#     error: bool = Field(...)
-#     statusCode: int = Field(...)
-#     message: str = Field(...)
-#     data: Cv19Data = Field(...)
-# ---------------------------------------------
+from get_data.data_types import Cv19Location
 from localization.translator import Translator
 from utils import FuncParameters
 
 
-class Cv19Location(BaseModel):
-    id: str = Field(...)
-    rank: int = Field(...)
-    Country: str = Field(...)
-    Continent: str = Field(...)
-    TwoLetterSymbol: Optional[str] = Field(default=None)
-    ThreeLetterSymbol: Optional[str] = Field(default=None)
-    Infection_Risk: int = Field(...)
-    Case_Fatality_Rate: int = Field(...)
-    Test_Percentage: int = Field(...)
-    Recovery_Proporation: int = Field(...)
-    TotalCases: int = Field(...)
-    NewCases: int = Field(...)
-    TotalDeaths: int = Field(...)
-    NewDeaths: int = Field(...)
-    TotalRecovered: str = Field(...)
-    NewRecovered: int = Field(...)
-    ActiveCases: int = Field(...)
-    TotalTests: str = Field(...)
-    Population: str = Field(...)
-    one_Caseevery_X_ppl: int = Field(...)
-    one_Deathevery_X_ppl: int = Field(...)
-    one_Testevery_X_ppl: int = Field(...)
-    Deaths_1M_pop: int = Field(...)
-    Serious_Critical: int = Field(...)
-    Tests_1M_Pop: int = Field(...)
-    TotCases_1M_Pop: int = Field(...)
-
-
-# class Cv19Data(BaseModel):
-#     data: Optional[List[Cv19Location]] = Field(default=None)
-
-
 async def covid19_data(args: FuncParameters) -> Optional[str]:
-        # session: ClientSession, p_country: Optional[str] = None):
     if args.message.text == "/cv19belarus":
         url = "https://vaccovid-coronavirus-vaccine-and-treatment-tracker.p.rapidapi.com/api/npm-covid-data/" \
               "country-report-iso-based/Belarus/blr"

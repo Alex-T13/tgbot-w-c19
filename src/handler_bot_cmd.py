@@ -14,10 +14,8 @@ VALID_BOT_COMMANDS = {
         "/weather": weather_data,
         "/currency": get_data_currency,
         "/btc": get_data_btc,
-        # "/covid19global": covid19_data,
         "/cv19belarus": covid19_data,
         "/cv19world": covid19_data,
-        # "/covid19usa": covid19_data,
 }
 
 

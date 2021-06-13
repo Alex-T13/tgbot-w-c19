@@ -117,7 +117,7 @@ async def get_users(request: Request, password: str = Form(...), ):
             last_name=user.last_name,
             username=user.username,
         )
-        for user in objects  # look in the docs what this shit does
+        for user in objects  # List!!
     ]
 
     logger.debug("built users")

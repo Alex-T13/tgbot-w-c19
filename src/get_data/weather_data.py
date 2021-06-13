@@ -1,90 +1,11 @@
-from typing import Optional, List
+from typing import Optional
 from fastapi import status
-from pydantic import Field
-from pydantic.main import BaseModel
 
 from config import settings
 from custom_logging import logger
+from get_data.data_types import WeatherData
 from localization.translator import Translator
 from utils import FuncParameters
-
-
-class CoordW(BaseModel):
-    lon: float = Field(...)
-    lat: float = Field(...)
-
-
-class Weather(BaseModel):
-    id: int = Field(...)
-    main: Optional[str] = Field(default=None)
-    description: Optional[str] = Field(default=None)  # облачно
-    icon: Optional[str] = Field(default=None)
-
-
-class MainW(BaseModel):
-    temp: int = Field(...)
-    feels_like: float = Field(...)
-    temp_min: int = Field(...)
-    temp_max: int = Field(...)
-    pressure: int = Field(...)
-    humidity: int = Field(...)
-
-
-class WindW(BaseModel):
-    speed: Optional[int] = Field(default=None)
-    deg: Optional[int] = Field(default=None)
-
-
-class CloudsW(BaseModel):
-    all: Optional[int] = Field(default=None)
-
-
-class RainW(BaseModel):
-    _1h: Optional[int] = Field(default=None)
-    _3h: Optional[int] = Field(default=None)
-
-    class Config:
-        fields = {
-            "_1h": "1h",
-            "_3h": "3h",
-        }
-
-
-class SnowW(BaseModel):
-    _1h: Optional[int] = Field(default=None)
-    _3h: Optional[int] = Field(default=None)
-
-    class Config:
-        fields = {
-            "_1h": "1h",
-            "_3h": "3h",
-        }
-
-
-class SysW(BaseModel):
-    type: Optional[int] = Field(default=None)
-    id: int = Field(...)
-    country: str = Field(...)
-    sunrise: Optional[str] = Field(default=None)
-    sunset: Optional[str] = Field(default=None)
-
-
-class WeatherData(BaseModel):
-    coord: Optional[CoordW] = Field(default=None)
-    weather: List[Weather] = Field(default_factory=list)
-    base: Optional[str] = Field(default=None)
-    main: MainW = Field(...)
-    visibility: Optional[int] = Field(default=None)
-    wind: Optional[WindW] = Field(default=None)
-    clouds: Optional[CloudsW] = Field(default=None)
-    rain: Optional[RainW] = Field(default=None)
-    snow: Optional[SnowW] = Field(default=None)
-    dt: Optional[int] = Field(default=None)
-    sys: SysW = Field(...)
-    timezone: int = Field(...)
-    id: int = Field(...)
-    name: Optional[str] = Field(default=None)  # "Минск",
-    cod: int = Field(...)
 
 
 async def weather_data(args: FuncParameters) -> Optional[str]:
