@@ -1,14 +1,12 @@
-import json
-import inspect
 from typing import Optional, List
-from aiohttp import ClientSession
 from fastapi import status
 from pydantic import Field
 from pydantic.main import BaseModel
 
 from config import settings
 from custom_logging import logger
-from localization.translator import translator, Translator
+from localization.translator import Translator
+from utils import FuncParameters
 
 
 class CoordW(BaseModel):
@@ -89,11 +87,11 @@ class WeatherData(BaseModel):
     cod: int = Field(...)
 
 
-async def weather_data(session: ClientSession, loc: str) -> Optional[str]:
-    # name = get_data_weather.__name__
+async def weather_data(args: FuncParameters) -> Optional[str]:
+        # session: ClientSession, loc: str) -> Optional[str]:
     url = f"https://api.openweathermap.org/data/2.5/weather?id=625144&appid={settings.open_weather_appid}&units" \
-          f"=metric&lang={loc}"
-    response = await session.get(url)
+          f"=metric&lang={args.localization}"
+    response = await args.session.get(url)
 
     if response.status != status.HTTP_200_OK:
         logger.warning("openweathermap api call failed: %s", response)
@@ -115,5 +113,5 @@ async def weather_data(session: ClientSession, loc: str) -> Optional[str]:
         'cloudiness(%)': resp_obj_format.clouds.all
     }
 
-    return Translator.trl_weather_data(loc=loc, data=new_dict_resp, )
+    return Translator.trl_weather_data(loc=args.localization, data=new_dict_resp)
     # return translator(loc=loc, data=new_dict_resp, )

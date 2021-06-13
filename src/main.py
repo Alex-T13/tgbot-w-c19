@@ -1,5 +1,3 @@
-import json
-
 from aiohttp import ClientSession
 from fastapi import Depends, FastAPI, Form, HTTPException, Request, status
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -11,10 +9,11 @@ from db import crud
 from dirs import DIR_TEMPLATES
 from telegram.methods import get_webhook_info, send_message, set_webhook
 from telegram.types import Update, User, Message
-# from telegram.types import UserListApiSchema
 from urls import hide_webhook_token, PATH_DOCS, PATH_ROOT, PATH_SETUP_WEBHOOK
 from urls import PATH_WEBHOOK_SECRET, URL_WEBHOOK, URL_WEBHOOK_SECRET
-from utils import choice_of_answer, welcome_back
+from handler_bot_commands import choice_of_answer
+from utils import welcome_back, FuncParameters
+
 
 app = FastAPI(
     description="Telegram Bot",
@@ -75,22 +74,28 @@ async def handle_setup_webhook(
 
 @app.post(f"{PATH_WEBHOOK_SECRET}/")
 async def handle_webhook(update: Update, client_session: ClientSession = Depends(http_client_session), ):
-    update_massage = update.message if update.message is not None else update.edited_message
+    update_message = update.message if update.message is not None else update.edited_message
 
-    if not crud.get_user_by_id(update_massage.from_.id):
-        user = crud.create_user(update_massage)
+    if not crud.get_user_by_id(update_message.from_.id):
+        user = crud.create_user(update_message)
         logger.debug(f"created user: {user}")
 
     loc = 'ru'
 
-    msg_welcome_back = await welcome_back(update_massage, loc=loc)
+    args = FuncParameters(
+        session=client_session,
+        message=update_message,
+        localization=loc,
+    )
+
+    msg_welcome_back = await welcome_back(args)
     if msg_welcome_back:
-        await send_message(client_session, chat_id=update_massage.chat.id, text=msg_welcome_back)
+        await send_message(client_session, chat_id=update_message.chat.id, text=msg_welcome_back)
 
-    crud.save_message(update_massage)
+    crud.save_message(update_message)
 
-    answer = await choice_of_answer(client_session, update_massage, loc=loc)
-    msg = await send_message(client_session, chat_id=update_massage.chat.id, text=answer)
+    answer = await choice_of_answer(args)
+    msg = await send_message(client_session, chat_id=update_message.chat.id, text=answer)
     logger.debug(msg.json(indent=2, sort_keys=True))
 
 
