@@ -1,10 +1,14 @@
-from typing import Optional, List
+import dataclasses
+from typing import Optional, List, Union
 
+from aiohttp import ClientSession
 from pydantic import Field
 from pydantic.main import BaseModel
 
+from telegram.types import Message
 
-# ------ weather_data -------------
+
+# ------ weather_data ---------------------
 class CoordW(BaseModel):
     lon: float = Field(...)
     lat: float = Field(...)
@@ -111,3 +115,13 @@ class Cv19Location(BaseModel):
     Serious_Critical: int = Field(...)
     Tests_1M_Pop: int = Field(...)
     TotCases_1M_Pop: int = Field(...)
+
+
+# ------------other----------------------------
+@dataclasses.dataclass
+class FuncParameters:
+    localization: str
+    # text: Optional[str] = None
+    session: Optional[ClientSession] = None
+    message: Optional[Message] = None
+    data: Optional[Union[dict, str]] = None

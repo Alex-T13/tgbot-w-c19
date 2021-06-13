@@ -1,28 +1,23 @@
-import json
+from typing import Optional
 
-from aiohttp import ClientSession
 from fastapi import status
 from custom_logging import logger
+from get_data.data_types import FuncParameters
+from localization.translator import Translator
 
 
-async def get_data_btc(session: ClientSession, ):
-
+async def bitcoin_data(args: FuncParameters) -> Optional[str]:
     url = "https://apirone.com/api/v2/ticker?currency=btc"
-
-    response = await session.get(url)
-
+    response = await args.session.get(url)
     if response.status != status.HTTP_200_OK:
         logger.warning("https://apirone.com api call failed: %s", response)
         body = await response.text()
         logger.debug(body)
-
         return None
 
-    btc = await response.json()
-    logger.debug(f"get btc in response: {btc}")
+    payload = await response.json()
+    new_dict_resp = {
+        'USD': payload['usd']
+    }
 
-    btc_str = f"Курс биткойна к USD: {btc['usd']}"
-
-    obj_json_str = json.dumps(btc_str, indent=2, ensure_ascii=False)
-
-    return obj_json_str
+    return Translator.data_translation(loc=args.localization, data=new_dict_resp)

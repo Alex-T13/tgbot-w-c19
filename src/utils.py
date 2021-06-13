@@ -1,29 +1,9 @@
-import dataclasses
 from datetime import datetime, timedelta
-from typing import Optional, Union
-
-from aiohttp import ClientSession
 
 from custom_logging import logger
 from db.crud import get_last_message
+from get_data.data_types import FuncParameters
 from localization.translator import Translator
-from telegram.types import Message
-
-
-@dataclasses.dataclass
-class FuncParameters:
-
-    localization: str
-    # text: Optional[str] = None
-    session: Optional[ClientSession] = None
-    message: Optional[Message] = None
-    data: Optional[Union[dict, str]] = None
-
-
-# class ResponseT(NamedTuple):
-#     status: str
-#     headers: Optional[dict] = None
-#     payload: Optional[bytes] = None
 
 
 async def welcome_back(args: FuncParameters) -> str:

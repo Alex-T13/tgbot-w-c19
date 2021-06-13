@@ -1,19 +1,19 @@
 from typing import Optional
 
 from custom_logging import logger
-from get_data.bitcoin_data import get_data_btc
-from get_data.currency_data import get_data_currency
+from get_data.bitcoin_data import bitcoin_data
+from get_data.currency_data import currency_data
 from get_data.covid19_data import covid19_data
+from get_data.data_types import FuncParameters
 from get_data.weather_data import weather_data
 from localization import vocabularies
 from localization.translator import Translator
-from utils import FuncParameters
 
 
 VALID_BOT_COMMANDS = {
         "/weather": weather_data,
-        "/currency": get_data_currency,
-        "/btc": get_data_btc,
+        "/currency": currency_data,
+        "/btc": bitcoin_data,
         "/cv19belarus": covid19_data,
         "/cv19world": covid19_data,
 }
@@ -23,7 +23,9 @@ async def choice_of_answer(args: FuncParameters) -> str:
     if args.message.entities:
         return await if_bot_command(args)
     try:
-        payload = message_type_handler(args).title()
+        payload = message_type_handler(args)
+        if not payload:
+            raise AttributeError
     except AttributeError:
         return Translator.trl_choice_of_answer(loc=args.localization, data=args.message.from_.first_name)
     else:

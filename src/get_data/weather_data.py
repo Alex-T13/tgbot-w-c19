@@ -3,9 +3,8 @@ from fastapi import status
 
 from config import settings
 from custom_logging import logger
-from get_data.data_types import WeatherData
+from get_data.data_types import WeatherData, FuncParameters
 from localization.translator import Translator
-from utils import FuncParameters
 
 
 async def weather_data(args: FuncParameters) -> Optional[str]:
@@ -21,7 +20,6 @@ async def weather_data(args: FuncParameters) -> Optional[str]:
 
     resp_json = await response.json()
     resp_obj_format = WeatherData(**resp_json)
-
     new_dict_resp = {
         'city': resp_obj_format.name,
         'weather': resp_obj_format.weather[-1].description,
@@ -32,4 +30,4 @@ async def weather_data(args: FuncParameters) -> Optional[str]:
         'cloudiness(%)': resp_obj_format.clouds.all
     }
 
-    return Translator.trl_weather_data(loc=args.localization, data=new_dict_resp)
+    return Translator.data_translation(loc=args.localization, data=new_dict_resp)

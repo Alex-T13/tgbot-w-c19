@@ -3,9 +3,8 @@ from fastapi import status
 
 from config import settings
 from custom_logging import logger
-from get_data.data_types import Cv19Location
+from get_data.data_types import Cv19Location, FuncParameters
 from localization.translator import Translator
-from utils import FuncParameters
 
 
 async def covid19_data(args: FuncParameters) -> Optional[str]:
@@ -27,10 +26,7 @@ async def covid19_data(args: FuncParameters) -> Optional[str]:
         return None
 
     payload = await response.json()
-    logger.debug(payload)
-
     obj_format = Cv19Location(**payload[0])
-
     new_dict_resp = {
         'Total cases': obj_format.TotalCases,
         'New cases': obj_format.NewCases,
@@ -47,4 +43,4 @@ async def covid19_data(args: FuncParameters) -> Optional[str]:
     # for r in (("Global", "Весь мир"), ("Belarus", "Беларусь"), ("Russia", "Россия"), ("US", "США")):
     #     obj_json = obj_json.replace(*r)
 
-    return Translator.trl_covid19_data(loc=args.localization, data=new_dict_resp)
+    return Translator.data_translation(loc=args.localization, data=new_dict_resp)

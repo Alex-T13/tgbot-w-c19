@@ -58,6 +58,31 @@ COVID19_DATA = {
         'Total tests': 'Total tests',
     }
 }
+CURRENCY_DATA = {
+    'ru': {
+        'USD': 'Доллар США',
+        'EUR': 'Евро',
+        '100 RUB': '100 Российских рублей',
+        '100 UAH': '100 Украинских гривен',
+        '10 PLN': '10 Польских злотых',
+    },
+    'en': {
+        'USD': 'U.S. dollar',
+        'EUR': 'Euro',
+        '100 RUB': '100 Russian rubles',
+        '100 UAH': '100 Ukrainian hryvnia',
+        '10 PLN': '10 Polish zlotys',
+    }
+}
+
+BITCOIN_DATA = {
+    'ru': {
+        'USD': 'Долларов США за биткоин',
+    },
+    'en': {
+        'USD': 'USD per bitcoin',
+    }
+}
 
 
 WELCOME_BACK = {
