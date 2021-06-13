@@ -27,10 +27,8 @@ class FuncParameters:
 
 
 async def welcome_back(args: FuncParameters) -> str:
-        # message: Message, loc: str) -> str:
     last_message = get_last_message(args.message.from_.id)
-    # logger.debug(f"last message: {last_message}")
-    since = datetime.now() - timedelta(minutes=1)  # 30/ 12hours
+    since = datetime.now() - timedelta(minutes=30)  # 30/ 12hours
 
     if last_message.created_at < since:
         logger.debug(f"the message 'welcome back' will be sent to user: {args.message.from_.first_name}, "

@@ -3,20 +3,21 @@ from typing import Optional
 from custom_logging import logger
 from get_data.bitcoin_data import get_data_btc
 from get_data.currency_data import get_data_currency
-from get_data.covid19_data import get_data_cv19
+from get_data.covid19_data import covid19_data
 from get_data.weather_data import weather_data
 from localization import vocabularies
 from localization.translator import Translator
 from utils import FuncParameters
 
+
 VALID_BOT_COMMANDS = {
         "/weather": weather_data,
         "/currency": get_data_currency,
         "/btc": get_data_btc,
-        "/covid19global": get_data_cv19,
-        "/covid19blr": get_data_cv19,
-        "/covid19rus": get_data_cv19,
-        "/covid19usa": get_data_cv19,
+        # "/covid19global": covid19_data,
+        "/cv19belarus": covid19_data,
+        "/cv19world": covid19_data,
+        # "/covid19usa": covid19_data,
 }
 
 

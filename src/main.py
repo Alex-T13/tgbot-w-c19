@@ -11,7 +11,7 @@ from telegram.methods import get_webhook_info, send_message, set_webhook
 from telegram.types import Update, User, Message
 from urls import hide_webhook_token, PATH_DOCS, PATH_ROOT, PATH_SETUP_WEBHOOK
 from urls import PATH_WEBHOOK_SECRET, URL_WEBHOOK, URL_WEBHOOK_SECRET
-from handler_bot_commands import choice_of_answer
+from handler_bot_cmd import choice_of_answer
 from utils import welcome_back, FuncParameters
 
 
@@ -80,7 +80,7 @@ async def handle_webhook(update: Update, client_session: ClientSession = Depends
         user = crud.create_user(update_message)
         logger.debug(f"created user: {user}")
 
-    loc = 'ru'
+    loc = 'en'
 
     args = FuncParameters(
         session=client_session,

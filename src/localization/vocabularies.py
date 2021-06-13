@@ -36,6 +36,30 @@ WEATHER_DATA = {
     },
 }
 
+COVID19_DATA = {
+    'ru': {
+        'Total cases': 'Всего случаев заражения',
+        'New cases': 'Новых заражений за сутки',
+        'Total deaths': 'Всего смертей',
+        'New deaths': 'Новых смертей за сутки',
+        'Total recovered': 'Всего вездоровело',
+        'New recovered': 'Выздоровело за сутки',
+        'Active cases': 'В активной фазе болезни',
+        'TotalTests': 'Всего протестировано',
+    },
+    'en': {
+        'Total cases': 'Total cases',
+        'New cases': 'New cases',
+        'Total deaths': 'Total deaths',
+        'New deaths': 'New deaths',
+        'Total recovered': 'Total recovered',
+        'New recovered': 'New recovered',
+        'Active cases': 'Active cases',
+        'Total tests': 'Total tests',
+    }
+}
+
+
 WELCOME_BACK = {
     'ru': 'С возвращением,',
     'en': 'Welcome back,',

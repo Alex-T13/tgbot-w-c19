@@ -28,6 +28,15 @@ class Translator:
         return json.dumps(translated_data, indent=2, ensure_ascii=False if loc != 'en' else True)
 
     @staticmethod
+    def trl_covid19_data(loc: str, data: dict):
+        vocabulary = vocabularies.COVID19_DATA[loc]
+        translated_data = {}
+        for key in data.keys():
+            if key in vocabulary:
+                translated_data[vocabulary[key]] = data.get(key)
+        return json.dumps(translated_data, indent=2, ensure_ascii=False if loc != 'en' else True)
+
+    @staticmethod
     def trl_welcome_back(loc: str, data: str):
         vocabulary = vocabularies.WELCOME_BACK[loc]
         translated_data = f"{vocabulary} {data}!"

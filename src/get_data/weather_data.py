@@ -88,7 +88,6 @@ class WeatherData(BaseModel):
 
 
 async def weather_data(args: FuncParameters) -> Optional[str]:
-        # session: ClientSession, loc: str) -> Optional[str]:
     url = f"https://api.openweathermap.org/data/2.5/weather?id=625144&appid={settings.open_weather_appid}&units" \
           f"=metric&lang={args.localization}"
     response = await args.session.get(url)
@@ -97,7 +96,6 @@ async def weather_data(args: FuncParameters) -> Optional[str]:
         logger.warning("openweathermap api call failed: %s", response)
         body = await response.text()
         logger.debug(body)
-
         return None
 
     resp_json = await response.json()
@@ -114,4 +112,3 @@ async def weather_data(args: FuncParameters) -> Optional[str]:
     }
 
     return Translator.trl_weather_data(loc=args.localization, data=new_dict_resp)
-    # return translator(loc=loc, data=new_dict_resp, )
