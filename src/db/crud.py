@@ -37,7 +37,7 @@ def create_user(session: Session_db, data: Message) -> UserModel:
 
 @using_session_db
 def get_user_by_id(session: Session_db, user_id: int) -> UserModel:
-    user = session.query(UserModel).filter_by(id_tg=user_id).first()  # get(user_id)
+    user = session.query(UserModel).filter_by(id_tg=user_id).first()
     logger.debug(f"get single user: {user}")
     return user
 
