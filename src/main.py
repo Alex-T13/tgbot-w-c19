@@ -12,7 +12,7 @@ from telegram.types import Update, User, Message
 from urls import hide_webhook_token, PATH_DOCS, PATH_ROOT, PATH_SETUP_WEBHOOK
 from urls import PATH_WEBHOOK_SECRET, URL_WEBHOOK, URL_WEBHOOK_SECRET
 from handler_bot_cmd import choice_of_answer
-from utils import welcome_back, FuncParameters
+from utils import welcome_back, FuncParameters, language_info
 
 
 app = FastAPI(
@@ -76,16 +76,15 @@ async def handle_setup_webhook(
 async def handle_webhook(update: Update, client_session: ClientSession = Depends(http_client_session), ):
     update_message = update.message if update.message is not None else update.edited_message
 
-    if not crud.get_user_by_id(update_message.from_.id):
+    user = crud.get_user_by_id(update_message.from_.id)
+    if not user:
+        await send_message(client_session, chat_id=update_message.chat.id, text=language_info())
         user = crud.create_user(update_message)
-        logger.debug(f"created user: {user}")
-
-    loc = 'en'
 
     args = FuncParameters(
         session=client_session,
         message=update_message,
-        localization=loc,
+        localization=user.lang,
     )
 
     msg_welcome_back = await welcome_back(args)
@@ -93,7 +92,6 @@ async def handle_webhook(update: Update, client_session: ClientSession = Depends
         await send_message(client_session, chat_id=update_message.chat.id, text=msg_welcome_back)
 
     crud.save_message(update_message)
-
     answer = await choice_of_answer(args)
     msg = await send_message(client_session, chat_id=update_message.chat.id, text=answer)
     logger.debug(msg.json(indent=2, sort_keys=True))

@@ -8,14 +8,16 @@ from get_data.data_types import FuncParameters
 from get_data.weather_data import weather_data
 from localization import vocabularies
 from localization.translator import Translator
-
+from utils import language
 
 VALID_BOT_COMMANDS = {
-        "/weather": weather_data,
-        "/currency": currency_data,
-        "/btc": bitcoin_data,
-        "/cv19belarus": covid19_data,
-        "/cv19world": covid19_data,
+        '/weather': weather_data,
+        '/currency': currency_data,
+        '/btc': bitcoin_data,
+        '/cv19belarus': covid19_data,
+        '/cv19world': covid19_data,
+        '/ru': language,
+        '/en': language,
 }
 
 
@@ -43,7 +45,12 @@ def choice_of_greeting(args: FuncParameters) -> str:
 
 async def running_bot_command(args: FuncParameters) -> str:
     func = VALID_BOT_COMMANDS.get(args.message.text)
-    payload = await func(args)
+
+    lang = ['/ru', '/en']
+    if args.message.text in lang:
+        payload = func(args)
+    else:
+        payload = await func(args)
     return payload
 
 

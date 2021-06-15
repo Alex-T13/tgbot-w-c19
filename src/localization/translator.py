@@ -6,23 +6,9 @@ from custom_logging import logger
 
 
 class Translator:
-    # def __init__(self):
-    # self.loc = loc
-    # self.data = data
-    # source_name = inspect.stack()[1].function   # or [1][3]
-    # logger.debug(f"source_name - {source_name}")
-    # method_name = "trl_" + source_name
-    # self.vocabulary = getattr(vocabularies, source_name.upper())[loc]
-    # logger.debug(f"vocabulary - {self.vocabulary}")
-
-    # def exec(self, method_name):
-    #     return getattr(Translator, method_name)(self.loc, self.data, self.vocabulary)
-
     @staticmethod
     def data_translation(loc: str, data: dict) -> str:
-        # logger.debug(f"data - {data}")
         source_name = inspect.stack()[1].function  # or [1][3]
-        # logger.debug(f"source_name - {source_name}")
         ensure_ascii = True if loc == 'en' else False
         try:
             vocabulary = getattr(vocabularies, source_name.upper())[loc]

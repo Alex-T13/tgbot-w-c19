@@ -58,6 +58,7 @@ COVID19_DATA = {
         'Total tests': 'Total tests',
     }
 }
+
 CURRENCY_DATA = {
     'ru': {
         'USD': 'Доллар США',
@@ -84,6 +85,17 @@ BITCOIN_DATA = {
     }
 }
 
+LANGUAGE_INFO = {
+    'ru': 'Я работаю на двух языках (русский и английский). По умолчанию установлен русский язык. '
+          'Для смены языка воспользуйся командами: "/ru" или "/en".',
+    'en': 'I work in two languages (Russian and English). The default language is Russian. '
+          'To change the language, use the commands: "/ru" or "/en".',
+}
+
+SET_LANGUAGE = {
+    'ru': 'Выбран русский язык.',
+    'en': 'English is selected.',
+}
 
 WELCOME_BACK = {
     'ru': 'С возвращением,',
