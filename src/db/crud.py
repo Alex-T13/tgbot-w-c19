@@ -21,7 +21,7 @@ def using_session_db(func_: Callable):
 @using_session_db
 def create_user(session: Session_db, data: Message) -> UserModel:
     user = UserModel(
-        id=data.from_.id,
+        id_tg=data.from_.id,
         first_name=data.from_.first_name,
         is_bot=data.from_.is_bot,
         last_name=data.from_.last_name,
@@ -37,7 +37,7 @@ def create_user(session: Session_db, data: Message) -> UserModel:
 
 @using_session_db
 def get_user_by_id(session: Session_db, user_id: int) -> UserModel:
-    user = session.query(UserModel).get(user_id)   # filter(UserModel.id == user_id).first()
+    user = session.query(UserModel).filter_by(id_tg=user_id).first()  # get(user_id)
     logger.debug(f"get single user: {user}")
     return user
 
@@ -56,7 +56,7 @@ def get_all_users(session: Session_db, ) -> List[UserModel]:
 @using_session_db
 def save_message(session: Session_db, data: Message) -> MessageModel:
     message = MessageModel(
-        # id=data.message_id,
+        id_tg=data.message_id,
         author_id=data.from_.id,
         text=data.text,
     )
@@ -77,7 +77,7 @@ def get_last_message(session: Session_db, user_id: int) -> MessageModel:
 
 @using_session_db
 def set_language(session: Session_db, args: FuncParameters) -> str:
-    user = session.query(UserModel).get(args.message.from_.id)
+    user = session.query(UserModel).filter_by(id_tg=args.message.from_.id).first()
     user.lang = args.message.text[1:]
     session.add(user)
     session.commit()
