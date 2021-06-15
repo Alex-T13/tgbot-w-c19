@@ -1,15 +1,14 @@
-import json
-from typing import Optional
-from typing import List
+import dataclasses
+from typing import Optional, List, Union
+
 from aiohttp import ClientSession
-from fastapi import status
 from pydantic import Field
 from pydantic.main import BaseModel
 
-from config import settings
-from custom_logging import logger
+from telegram.types import Message
 
 
+# ------ weather_data ---------------------
 class CoordW(BaseModel):
     lon: float = Field(...)
     lat: float = Field(...)
@@ -88,31 +87,41 @@ class WeatherData(BaseModel):
     cod: int = Field(...)
 
 
-async def get_weather_data(session: ClientSession) -> Optional[str]:
-    url = f"https://api.openweathermap.org/data/2.5/weather?id=625144&appid={settings.open_weather_appid}&units" \
-          "=metric&lang=ru"
-    response = await session.get(url)
+# ------ covid19_data -------------
+class Cv19Location(BaseModel):
+    id: str = Field(...)
+    rank: int = Field(...)
+    Country: str = Field(...)
+    Continent: str = Field(...)
+    TwoLetterSymbol: Optional[str] = Field(default=None)
+    ThreeLetterSymbol: Optional[str] = Field(default=None)
+    Infection_Risk: int = Field(...)
+    Case_Fatality_Rate: int = Field(...)
+    Test_Percentage: int = Field(...)
+    Recovery_Proporation: int = Field(...)
+    TotalCases: int = Field(...)
+    NewCases: int = Field(...)
+    TotalDeaths: int = Field(...)
+    NewDeaths: int = Field(...)
+    TotalRecovered: str = Field(...)
+    NewRecovered: int = Field(...)
+    ActiveCases: int = Field(...)
+    TotalTests: str = Field(...)
+    Population: str = Field(...)
+    one_Caseevery_X_ppl: int = Field(...)
+    one_Deathevery_X_ppl: int = Field(...)
+    one_Testevery_X_ppl: int = Field(...)
+    Deaths_1M_pop: int = Field(...)
+    Serious_Critical: int = Field(...)
+    Tests_1M_Pop: int = Field(...)
+    TotCases_1M_Pop: int = Field(...)
 
-    if response.status != status.HTTP_200_OK:
-        logger.warning("openweathermap api call failed: %s", response)
-        body = await response.text()
-        logger.debug(body)
 
-        return None
-
-    payload = await response.json()
-    obj_format = WeatherData(**payload)
-
-    obj_format_dict = {
-        "Город": obj_format.name,
-        "Погодные условия": obj_format.weather[-1].description,
-        "Температура(C)": obj_format.main.temp,
-        "Ощущается(C)": obj_format.main.feels_like,
-        "Влажность(%)": obj_format.main.humidity,
-        "Скорость ветра(м/с)": obj_format.wind.speed,
-        "Облачность(%)": obj_format.clouds.all
-    }
-
-    obj_json_str = json.dumps(obj_format_dict, indent=2, ensure_ascii=False)
-
-    return obj_json_str
+# ------------other----------------------------
+@dataclasses.dataclass
+class FuncParameters:
+    localization: str
+    # text: Optional[str] = None
+    session: Optional[ClientSession] = None
+    message: Optional[Message] = None
+    data: Optional[Union[dict, str]] = None

@@ -1,70 +1,31 @@
 from datetime import datetime, timedelta
-from typing import Optional
-from aiohttp import ClientSession
 
 from custom_logging import logger
-from db.crud import get_last_message
-from get_data.get_btc import get_btc
-from get_data.get_currency import get_currency
-from get_data.get_data_c19 import get_cv19_data
-from get_data.get_data_weather import get_weather_data
-from telegram.types import Message
+from db.crud import get_last_message, set_language
+from get_data.data_types import FuncParameters
+from localization import vocabularies
+from localization.translator import Translator
 
 
-async def main_switch_update(update_massage: Message, session: ClientSession):
-    if update_massage.entities:
-        bot_command = True if update_massage.entities[-1].type == "bot_command" else False   # !!!!warning!!!
-        if bot_command:
-            allowed_list = ("/weather", "/currency", "/btc", "/covid19global", "/covid19blr", "/covid19rus", "/covid19usa")
-            if update_massage.text not in allowed_list:
-                return choice_of_answer("")
+async def welcome_back(args: FuncParameters) -> str:
+    last_message = get_last_message(args.message.from_.id)
+    since = datetime.now() - timedelta(hours=3)
 
-            return await select_command_action(session, update_massage.text)
-
-    switch_dict = {
-        "text": lambda: choice_of_answer(update_massage.text),
-        "animation": lambda: choice_of_answer(""),
-        "sticker": lambda: choice_of_answer(""),
-        "voice": lambda: choice_of_answer(""),
-    }
-
-    for key, value in update_massage.dict().items():
-        if key in switch_dict and value:
-
-            return switch_dict[key]()
-
-    return "Не шли мне такое, я не знаю что с этим делать."
+    if last_message and last_message.created_at < since:
+        logger.debug(f"the message 'welcome back' will be sent to user: {args.message.from_.first_name}, "
+                     f"id: {args.message.from_.id}")
+        return Translator.trl_welcome_back(loc=args.localization, data=args.message.from_.first_name)
 
 
-def choice_of_answer(ar: Optional[str] = None):
-    check1 = ["hi", "hello", "good morning", "good afternoon", "good evening", "привет", "здравствуй", "здравствуйте",
-              "доброе утро", "добрый день", "добрый вечер"]
-    check2 = ["дай ответ на главный вопрос жизни, вселенной и вообще",
-              "give an answer to the ultimate question of life, the universe, and everything"]
-    if ar.lower() in check1:
-        return ar
-    elif ar.lower() in check2:
-        return "42"
+def language_info() -> str:
+    text = f"{vocabularies.LANGUAGE_INFO['ru']}   {vocabularies.LANGUAGE_INFO['en']}"
+    return text
+
+
+def language(args: FuncParameters) -> str:
+    if args.localization == args.message.text[1:]:
+        text = f"{vocabularies.SET_LANGUAGE[args.localization]}"
     else:
-        return "Ok"
-
-
-def select_command_action(session: ClientSession, arg: str):
-    switcher = {
-        "/weather": lambda: get_weather_data(session),
-        "/currency": lambda: get_currency(session),
-        "/btc": lambda: get_btc(session),
-        "/covid19global": lambda: get_cv19_data(session),
-        "/covid19blr": lambda: get_cv19_data(session, "Belarus"),
-        "/covid19rus": lambda: get_cv19_data(session, "Russia"),
-        "/covid19usa": lambda: get_cv19_data(session, "USA"),
-    }
-    payload = switcher[arg]()
-    return payload
-
-
-async def get_last_msg(msg: Message, ):
-    l_msg = get_last_message(msg.from_.id)
-    logger.debug(f"get_last_message: {l_msg}")
-    since = datetime.now() - timedelta(minutes=30)
-    return True if l_msg.created_at < since else False
+        text = f"{vocabularies.SET_LANGUAGE[set_language(args)]}"
+        logger.debug(f"{text}")
+    return text
