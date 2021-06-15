@@ -14,9 +14,9 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.orm import sessionmaker
 
 
-database_url = os.getenv("DATABASE_URL", "postgresql://postgres:POSTGRES@localhost:5432/tgbot_base")
+database_url = os.getenv("DATABASE_URL", "postgres://postgres:POSTGRES@localhost:5432/tgbot_base")
 if database_url.startswith("postgres://"):
-    uri = database_url.replace("postgres://", "postgresql://", 1)
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
 engine = create_engine(database_url)
 
 Session_db = sessionmaker(bind=engine)
