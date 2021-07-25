@@ -42,7 +42,7 @@ COVID19_DATA = {
         'New cases': 'Новых заражений за сутки',
         'Total deaths': 'Всего смертей',
         'New deaths': 'Новых смертей за сутки',
-        'Total recovered': 'Всего вездоровело',
+        'Total recovered': 'Всего выздоровело',
         'New recovered': 'Выздоровело за сутки',
         'Active cases': 'В активной фазе болезни',
         'TotalTests': 'Всего протестировано',
