@@ -29,3 +29,9 @@ def language(args: FuncParameters) -> str:
         text = f"{vocabularies.SET_LANGUAGE[set_language(args)]}"
         logger.debug(f"{text}")
     return text
+
+
+def line_bit(s):  # 1'234'567
+    s = s[::-1]
+    s = "`".join([s[i:i + 3] for i in range(0, len(s), 3)])
+    return s[::-1]

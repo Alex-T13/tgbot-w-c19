@@ -45,7 +45,7 @@ COVID19_DATA = {
         'Total recovered': 'Всего выздоровело',
         'New recovered': 'Выздоровело за сутки',
         'Active cases': 'В активной фазе болезни',
-        'TotalTests': 'Всего протестировано',
+        'Total tests': 'Всего протестировано',
     },
     'en': {
         'Total cases': 'Total cases',

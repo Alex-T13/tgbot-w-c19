@@ -5,6 +5,7 @@ from config import settings
 from custom_logging import logger
 from get_data.data_types import Cv19Location, FuncParameters
 from localization.translator import Translator
+from utils import line_bit
 
 
 async def covid19_data(args: FuncParameters) -> Optional[str]:
@@ -28,19 +29,14 @@ async def covid19_data(args: FuncParameters) -> Optional[str]:
     payload = await response.json()
     obj_format = Cv19Location(**payload[0])
     new_dict_resp = {
-        'Total cases': obj_format.TotalCases,
-        'New cases': obj_format.NewCases,
-        'Total deaths': obj_format.TotalDeaths,
-        'New deaths': obj_format.NewDeaths,
-        'Total recovered': obj_format.TotalRecovered,
-        'New recovered': obj_format.NewRecovered,
-        'Active cases': obj_format.ActiveCases,
-        'Total tests': obj_format.TotalTests,
+        'Total cases': line_bit(obj_format.TotalCases),
+        'New cases': line_bit(obj_format.NewCases),
+        'Total deaths': line_bit(obj_format.TotalDeaths),
+        'New deaths': line_bit(obj_format.NewDeaths),
+        'Total recovered': line_bit(obj_format.TotalRecovered),
+        'New recovered': line_bit(obj_format.NewRecovered),
+        'Active cases': line_bit(obj_format.ActiveCases),
+        'Total tests': line_bit(obj_format.TotalTests),
     }
-
-    # obj_json = json.dumps(obj_format_dict, indent=2, ensure_ascii=False)
-    #
-    # for r in (("Global", "Весь мир"), ("Belarus", "Беларусь"), ("Russia", "Россия"), ("US", "США")):
-    #     obj_json = obj_json.replace(*r)
 
     return Translator.data_translation(loc=args.localization, data=new_dict_resp)

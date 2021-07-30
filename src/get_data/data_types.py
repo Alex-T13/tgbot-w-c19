@@ -99,13 +99,13 @@ class Cv19Location(BaseModel):
     Case_Fatality_Rate: int = Field(...)
     Test_Percentage: int = Field(...)
     Recovery_Proporation: int = Field(...)
-    TotalCases: int = Field(...)
-    NewCases: int = Field(...)
-    TotalDeaths: int = Field(...)
-    NewDeaths: int = Field(...)
+    TotalCases: str = Field(...)  # int
+    NewCases: str = Field(...)  # int
+    TotalDeaths: str = Field(...)  # int
+    NewDeaths: str = Field(...)  # int
     TotalRecovered: str = Field(...)
-    NewRecovered: int = Field(...)
-    ActiveCases: int = Field(...)
+    NewRecovered: str = Field(...)  # int
+    ActiveCases: str = Field(...)  # int
     TotalTests: str = Field(...)
     Population: str = Field(...)
     one_Caseevery_X_ppl: int = Field(...)
@@ -117,11 +117,10 @@ class Cv19Location(BaseModel):
     TotCases_1M_Pop: int = Field(...)
 
 
-# ------------other----------------------------
+# ------------others----------------------------
 @dataclasses.dataclass
 class FuncParameters:
     localization: str
-    # text: Optional[str] = None
     session: Optional[ClientSession] = None
     message: Optional[Message] = None
     data: Optional[Union[dict, str]] = None
