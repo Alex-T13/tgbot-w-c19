@@ -30,6 +30,8 @@ async def currency_data(args: FuncParameters) -> Optional[str]:
             new_dict_resp[key] = curr_filter
     except IndexError:
         return None
+    except TimeoutError as err:
+        return str(err)
     else:
         return Translator.data_translation(loc=args.localization, data=new_dict_resp)
 
